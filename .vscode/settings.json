@@ -1,0 +1,9 @@
+{
+  "json.schemas": [
+    { "fileMatch": ["**/data/game.json"],      "url": "./src/engine/schemas/game.schema.json" },
+    { "fileMatch": ["**/data/actors.json"],    "url": "./src/engine/schemas/actors.schema.json" },
+    { "fileMatch": ["**/data/objects.json"],   "url": "./src/engine/schemas/objects.schema.json" },
+    { "fileMatch": ["**/data/dialogues.json"], "url": "./src/engine/schemas/dialogues.schema.json" },
+    { "fileMatch": ["**/data/scenes/*.json"],  "url": "./src/engine/schemas/scene.schema.json" }
+  ]
+}

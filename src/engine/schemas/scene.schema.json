@@ -1,0 +1,687 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "scenes/*.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["world"],
+  "properties": {
+    "world":         { "$ref": "#/definitions/world" },
+    "scaling":       { "$ref": "#/definitions/scaling" },
+    "portals":       { "$ref": "#/definitions/portals" },
+    "objects":       { "type": "object", "additionalProperties": { "$ref": "#/definitions/placement" } },
+    "scripts":       { "type": "object", "additionalProperties": { "$ref": "#/definitions/scriptDef" } },
+    "triggers":      { "type": "array", "items": { "$ref": "#/definitions/trigger" } },
+    "walkableAreas": { "type": "array", "items": { "$ref": "#/definitions/polygon" } },
+    "occluders":     { "type": "array", "items": { "$ref": "#/definitions/polygon" } },
+    "ambientBarks":  { "type": "object", "additionalProperties": { "$ref": "#/definitions/barkStream" } }
+  },
+  "definitions": {
+    "align": { "enum": ["top-left", "top", "top-right", "left", "center", "right", "bottom-left", "bottom", "bottom-right"] },
+    "direction": { "enum": ["north", "south", "east", "west"] },
+    "flagCondition": { "type": ["string", "array"], "items": { "type": "string" }, "minItems": 1 },
+    "point": { "type": "array", "items": { "type": "number" }, "minItems": 2, "maxItems": 2 },
+    "speechEffect": { "enum": ["jitter", "shake", "crt", "wobble"] },
+    "text": { "type": ["string", "array"], "items": { "type": "string" }, "minItems": 1 },
+
+    "world": {
+      "$comment": "A world with neither a backdrop nor a width has no resolvable extent; anyOf says so without making either key required on its own.",
+      "type": "object", "additionalProperties": false,
+      "anyOf": [{ "required": ["backdrop"] }, { "required": ["width"] }],
+      "properties": {
+        "backdrop": { "type": "string" },
+        "color":    { "type": "string" },
+        "width":    { "type": "number" }
+      }
+    },
+
+    "scaleStop": {
+      "type": "object", "additionalProperties": false,
+      "properties": { "y": { "type": "number" }, "scale": { "type": "number" } }
+    },
+    "scaling": {
+      "type": "object", "additionalProperties": false,
+      "properties": { "near": { "$ref": "#/definitions/scaleStop" }, "far": { "$ref": "#/definitions/scaleStop" } }
+    },
+
+    "portals": {
+      "type": "object", "additionalProperties": false,
+      "properties": {
+        "entries": { "type": "object", "additionalProperties": { "$ref": "#/definitions/entry" } },
+        "exits":   { "type": "object", "additionalProperties": { "$ref": "#/definitions/exit" } }
+      }
+    },
+    "entry": {
+      "type": "object", "additionalProperties": false,
+      "required": ["x", "y"],
+      "properties": {
+        "x": { "type": "number" }, "y": { "type": "number" },
+        "facing": { "$ref": "#/definitions/direction" },
+        "walk":   { "$ref": "#/definitions/direction" }
+      }
+    },
+    "exit": {
+      "type": "object", "additionalProperties": false,
+      "required": ["destination", "hotspot"],
+      "properties": {
+        "title":       { "type": "string" },
+        "destination": { "$ref": "#/definitions/destination" },
+        "walk":        { "$ref": "#/definitions/direction" },
+        "hotspot":     { "type": "array", "items": { "$ref": "#/definitions/point" }, "minItems": 3 },
+        "if":          { "$ref": "#/definitions/flagCondition" },
+        "ifNot":       { "$ref": "#/definitions/flagCondition" },
+        "blocked":     { "$ref": "#/definitions/blocked" }
+      }
+    },
+    "destination": {
+      "type": "object", "additionalProperties": false,
+      "required": ["scene", "entry"],
+      "properties": { "scene": { "type": "string" }, "entry": { "type": "string" } }
+    },
+    "blocked": {
+      "type": "object", "additionalProperties": false,
+      "properties": {
+        "if":      { "$ref": "#/definitions/flagCondition" },
+        "ifNot":   { "$ref": "#/definitions/flagCondition" },
+        "message": { "$ref": "#/definitions/text" }
+      }
+    },
+
+    "placement": {
+      "type": "object", "additionalProperties": false,
+      "properties": {
+        "x": { "type": "number" }, "y": { "type": "number" },
+        "hotspot": { "type": "array", "items": { "$ref": "#/definitions/point" }, "minItems": 3 },
+        "if":    { "$ref": "#/definitions/flagCondition" },
+        "ifNot": { "$ref": "#/definitions/flagCondition" }
+      }
+    },
+
+    "scriptDef": {
+      "if": { "type": "array" },
+      "then": { "type": "array", "items": { "$ref": "#/definitions/step" } },
+      "else": {
+        "type": "object", "additionalProperties": false,
+        "required": ["steps"],
+        "properties": {
+          "steps":    { "type": "array", "items": { "$ref": "#/definitions/step" } },
+          "cutscene": { "type": "boolean" }
+        }
+      }
+    },
+    "step": {
+      "$comment": "Per-action dispatch: each row routes the step to its contract in `definitions/actions`, the single authority for that action's required AND allowed keys. The step itself validates only that `action` exists and is a known name; the wrapping `if` skips dispatch entirely when `action` is missing, so the lone missing-required error surfaces instead of every contract's.",
+      "type": "object",
+      "required": ["action"],
+      "properties": {
+        "action": { "enum": [
+          "wait", "say", "sayRandom", "walkTo", "spawnActor", "removeActor",
+          "waitForState", "waitForAnimation", "waitForInput", "talkTo", "changeScene",
+          "showOverlay", "dismiss", "restartGame",
+          "setFlag", "clearFlag", "setObjectState", "setActorState",
+          "spawnObject", "removeObject", "giveObject", "teleport",
+          "startScript", "stopScript", "follow", "unfollow", "playAnimation",
+          "stopAnimation", "cameraFollow", "moveCamera", "face", "playMusic", "stopMusic"
+        ] }
+      },
+      "if": { "required": ["action"] },
+      "then": { "allOf": [
+        { "if": { "properties": { "action": { "const": "wait" } } },               "then": { "$ref": "#/definitions/actions/wait" } },
+        { "if": { "properties": { "action": { "const": "say" } } },                "then": { "$ref": "#/definitions/actions/say" } },
+        { "if": { "properties": { "action": { "const": "sayRandom" } } },          "then": { "$ref": "#/definitions/actions/sayRandom" } },
+        { "if": { "properties": { "action": { "const": "walkTo" } } },             "then": { "$ref": "#/definitions/actions/walkTo" } },
+        { "if": { "properties": { "action": { "const": "spawnActor" } } },         "then": { "$ref": "#/definitions/actions/spawnActor" } },
+        { "if": { "properties": { "action": { "const": "removeActor" } } },        "then": { "$ref": "#/definitions/actions/removeActor" } },
+        { "if": { "properties": { "action": { "const": "waitForState" } } },       "then": { "$ref": "#/definitions/actions/waitForState" } },
+        { "if": { "properties": { "action": { "const": "waitForAnimation" } } },   "then": { "$ref": "#/definitions/actions/waitForAnimation" } },
+        { "if": { "properties": { "action": { "const": "waitForInput" } } },       "then": { "$ref": "#/definitions/actions/waitForInput" } },
+        { "if": { "properties": { "action": { "const": "talkTo" } } },             "then": { "$ref": "#/definitions/actions/talkTo" } },
+        { "if": { "properties": { "action": { "const": "changeScene" } } },        "then": { "$ref": "#/definitions/actions/changeScene" } },
+        { "if": { "properties": { "action": { "const": "showOverlay" } } },        "then": { "$ref": "#/definitions/actions/showOverlay" } },
+        { "if": { "properties": { "action": { "const": "dismiss" } } },            "then": { "$ref": "#/definitions/actions/dismiss" } },
+        { "if": { "properties": { "action": { "const": "restartGame" } } },        "then": { "$ref": "#/definitions/actions/restartGame" } },
+        { "if": { "properties": { "action": { "const": "setFlag" } } },            "then": { "$ref": "#/definitions/actions/setFlag" } },
+        { "if": { "properties": { "action": { "const": "clearFlag" } } },          "then": { "$ref": "#/definitions/actions/clearFlag" } },
+        { "if": { "properties": { "action": { "const": "setObjectState" } } },     "then": { "$ref": "#/definitions/actions/setObjectState" } },
+        { "if": { "properties": { "action": { "const": "setActorState" } } },      "then": { "$ref": "#/definitions/actions/setActorState" } },
+        { "if": { "properties": { "action": { "const": "spawnObject" } } },        "then": { "$ref": "#/definitions/actions/spawnObject" } },
+        { "if": { "properties": { "action": { "const": "removeObject" } } },       "then": { "$ref": "#/definitions/actions/removeObject" } },
+        { "if": { "properties": { "action": { "const": "giveObject" } } },         "then": { "$ref": "#/definitions/actions/giveObject" } },
+        { "if": { "properties": { "action": { "const": "teleport" } } },           "then": { "$ref": "#/definitions/actions/teleport" } },
+        { "if": { "properties": { "action": { "const": "startScript" } } },        "then": { "$ref": "#/definitions/actions/startScript" } },
+        { "if": { "properties": { "action": { "const": "stopScript" } } },         "then": { "$ref": "#/definitions/actions/stopScript" } },
+        { "if": { "properties": { "action": { "const": "follow" } } },             "then": { "$ref": "#/definitions/actions/follow" } },
+        { "if": { "properties": { "action": { "const": "unfollow" } } },           "then": { "$ref": "#/definitions/actions/unfollow" } },
+        { "if": { "properties": { "action": { "const": "playAnimation" } } },      "then": { "$ref": "#/definitions/actions/playAnimation" } },
+        { "if": { "properties": { "action": { "const": "stopAnimation" } } },      "then": { "$ref": "#/definitions/actions/stopAnimation" } },
+        { "if": { "properties": { "action": { "const": "cameraFollow" } } },       "then": { "$ref": "#/definitions/actions/cameraFollow" } },
+        { "if": { "properties": { "action": { "const": "moveCamera" } } },         "then": { "$ref": "#/definitions/actions/moveCamera" } },
+        { "if": { "properties": { "action": { "const": "face" } } },               "then": { "$ref": "#/definitions/actions/face" } },
+        { "if": { "properties": { "action": { "const": "playMusic" } } },          "then": { "$ref": "#/definitions/actions/playMusic" } },
+        { "if": { "properties": { "action": { "const": "stopMusic" } } },          "then": { "$ref": "#/definitions/actions/stopMusic" } }
+      ] }
+    },
+
+    "actions": {
+      "$comment": "One entry per action: its complete authoring contract. Each re-declares `action` as a const (a dispatch `then` cannot see the outer property list, and it makes the contract self-contained) and rejects everything it doesn't understand.",
+      "wait": {
+        "type": "object", "additionalProperties": false, "required": ["action", "seconds"],
+        "properties": {
+          "action":  { "const": "wait" },
+          "seconds": { "type": "number" }
+        }
+      },
+      "say": {
+        "type": "object", "additionalProperties": false, "required": ["action", "text"],
+        "oneOf": [{ "required": ["actor"] }, { "required": ["object"] }],
+        "properties": {
+          "action":   { "const": "say" },
+          "actor":    { "type": "string" },
+          "object":   { "type": "string" },
+          "text":     { "type": "string" },
+          "duration": { "type": "number", "exclusiveMinimum": 0 },
+          "effect":   { "$ref": "#/definitions/speechEffect" },
+          "facing":   { "$ref": "#/definitions/direction" }
+        }
+      },
+      "sayRandom": {
+        "type": "object", "additionalProperties": false, "required": ["action", "lines"],
+        "oneOf": [{ "required": ["actor"] }, { "required": ["object"] }],
+        "properties": {
+          "action":   { "const": "sayRandom" },
+          "actor":    { "type": "string" },
+          "object":   { "type": "string" },
+          "lines":    { "type": "array", "items": { "type": "string" }, "minItems": 1 },
+          "duration": { "type": "number", "exclusiveMinimum": 0 },
+          "effect":   { "$ref": "#/definitions/speechEffect" },
+          "facing":   { "$ref": "#/definitions/direction" }
+        }
+      },
+      "walkTo": {
+        "type": "object", "additionalProperties": false, "required": ["action", "actor", "x", "y"],
+        "properties": {
+          "action":  { "const": "walkTo" },
+          "actor":   { "type": "string" },
+          "x":       { "type": "number" },
+          "y":       { "type": "number" },
+          "timeout": { "type": "number" }
+        }
+      },
+      "spawnActor": {
+        "type": "object", "additionalProperties": false, "required": ["action", "actor"],
+        "properties": {
+          "action":  { "const": "spawnActor" },
+          "actor":   { "type": "string" },
+          "entry":   { "type": "string" },
+          "x":       { "type": "number" },
+          "y":       { "type": "number" },
+          "facing":  { "$ref": "#/definitions/direction" },
+          "state":   { "type": "string" },
+          "timeout": { "type": "number" }
+        }
+      },
+      "removeActor": {
+        "type": "object", "additionalProperties": false, "required": ["action", "actor"],
+        "properties": {
+          "action":  { "const": "removeActor" },
+          "actor":   { "type": "string" },
+          "exit":    { "type": "string" },
+          "timeout": { "type": "number" }
+        }
+      },
+      "waitForState": {
+        "type": "object", "additionalProperties": false, "required": ["action", "state"],
+        "oneOf": [{ "required": ["actor"] }, { "required": ["object"] }],
+        "properties": {
+          "action":  { "const": "waitForState" },
+          "actor":   { "type": "string" },
+          "object":  { "type": "string" },
+          "state":   { "type": "string" },
+          "timeout": { "type": "number" }
+        }
+      },
+      "waitForAnimation": {
+        "type": "object", "additionalProperties": false, "required": ["action"],
+        "oneOf": [{ "required": ["actor"] }, { "required": ["object"] }],
+        "properties": {
+          "action":  { "const": "waitForAnimation" },
+          "actor":   { "type": "string" },
+          "object":  { "type": "string" },
+          "timeout": { "type": "number" }
+        }
+      },
+      "waitForInput": {
+        "type": "object", "additionalProperties": false, "required": ["action"],
+        "properties": {
+          "action": { "const": "waitForInput" }
+        }
+      },
+      "talkTo": {
+        "type": "object", "additionalProperties": false, "required": ["action", "target"],
+        "properties": {
+          "action": { "const": "talkTo" },
+          "target": { "type": "string" }
+        }
+      },
+      "changeScene": {
+        "type": "object", "additionalProperties": false, "required": ["action", "scene", "entry"],
+        "properties": {
+          "action": { "const": "changeScene" },
+          "scene":  { "type": "string" },
+          "entry":  { "type": "string" }
+        }
+      },
+      "showOverlay": {
+        "type": "object", "additionalProperties": false, "required": ["action", "items"],
+        "properties": {
+          "action":       { "const": "showOverlay" },
+          "items":        { "type": "array", "items": { "$ref": "#/definitions/item" }, "minItems": 1 },
+          "background":   { "type": "string" },
+          "align":        { "$ref": "#/definitions/align" },
+          "margin":       { "type": "integer", "minimum": 0 },
+          "offsetX":      { "type": "number" },
+          "offsetY":      { "type": "number" },
+          "transition":   { "enum": ["fade", "crossfade"] },
+          "transitionMs": { "type": "number" }
+        }
+      },
+      "dismiss": {
+        "type": "object", "additionalProperties": false, "required": ["action"],
+        "properties": {
+          "action":       { "const": "dismiss" },
+          "transition":   { "enum": ["fade"] },
+          "transitionMs": { "type": "number" },
+          "holdMs":       { "type": "number" }
+        }
+      },
+      "restartGame": {
+        "type": "object", "additionalProperties": false, "required": ["action"],
+        "properties": {
+          "action": { "const": "restartGame" }
+        }
+      },
+      "setFlag": {
+        "type": "object", "additionalProperties": false, "required": ["action", "flag"],
+        "properties": {
+          "action": { "const": "setFlag" },
+          "flag":   { "type": "string" }
+        }
+      },
+      "clearFlag": {
+        "type": "object", "additionalProperties": false, "required": ["action", "flag"],
+        "properties": {
+          "action": { "const": "clearFlag" },
+          "flag":   { "type": "string" }
+        }
+      },
+      "setObjectState": {
+        "type": "object", "additionalProperties": false, "required": ["action", "object", "state"],
+        "properties": {
+          "action": { "const": "setObjectState" },
+          "object": { "type": "string" },
+          "state":  { "type": "string" }
+        }
+      },
+      "setActorState": {
+        "type": "object", "additionalProperties": false, "required": ["action", "actor", "state"],
+        "properties": {
+          "action":  { "const": "setActorState" },
+          "actor":   { "type": "string" },
+          "state":   { "type": "string" },
+          "persist": { "type": "boolean" }
+        }
+      },
+      "spawnObject": {
+        "type": "object", "additionalProperties": false, "required": ["action", "object", "x", "y"],
+        "properties": {
+          "action":  { "const": "spawnObject" },
+          "object":  { "type": "string" },
+          "x":       { "type": "number" },
+          "y":       { "type": "number" },
+          "state":   { "type": "string" },
+          "persist": { "type": "boolean" }
+        }
+      },
+      "removeObject": {
+        "type": "object", "additionalProperties": false, "required": ["action", "object"],
+        "properties": {
+          "action": { "const": "removeObject" },
+          "object": { "type": "string" }
+        }
+      },
+      "giveObject": {
+        "type": "object", "additionalProperties": false, "required": ["action", "object", "target"],
+        "properties": {
+          "action": { "const": "giveObject" },
+          "object": { "type": "string" },
+          "target": { "type": "string" }
+        }
+      },
+      "teleport": {
+        "type": "object", "additionalProperties": false, "required": ["action", "x", "y"],
+        "oneOf": [{ "required": ["actor"] }, { "required": ["object"] }],
+        "properties": {
+          "action": { "const": "teleport" },
+          "actor":  { "type": "string" },
+          "object": { "type": "string" },
+          "x":      { "type": "number" },
+          "y":      { "type": "number" }
+        }
+      },
+      "startScript": {
+        "type": "object", "additionalProperties": false, "required": ["action", "script"],
+        "properties": {
+          "action": { "const": "startScript" },
+          "script": { "type": "string" }
+        }
+      },
+      "stopScript": {
+        "type": "object", "additionalProperties": false, "required": ["action", "name"],
+        "properties": {
+          "action": { "const": "stopScript" },
+          "name":   { "type": "string" }
+        }
+      },
+      "follow": {
+        "type": "object", "additionalProperties": false, "required": ["action", "actor", "target"],
+        "properties": {
+          "action":   { "const": "follow" },
+          "actor":    { "type": "string" },
+          "target":   { "type": "string" },
+          "distance": { "type": "number" }
+        }
+      },
+      "unfollow": {
+        "type": "object", "additionalProperties": false, "required": ["action", "actor"],
+        "properties": {
+          "action": { "const": "unfollow" },
+          "actor":  { "type": "string" }
+        }
+      },
+      "playAnimation": {
+        "type": "object", "additionalProperties": false, "required": ["action", "actor", "animation"],
+        "properties": {
+          "action":    { "const": "playAnimation" },
+          "actor":     { "type": "string" },
+          "animation": { "type": "string" }
+        }
+      },
+      "stopAnimation": {
+        "type": "object", "additionalProperties": false, "required": ["action", "actor"],
+        "properties": {
+          "action": { "const": "stopAnimation" },
+          "actor":  { "type": "string" }
+        }
+      },
+      "cameraFollow": {
+        "type": "object", "additionalProperties": false, "required": ["action", "actor"],
+        "properties": {
+          "action": { "const": "cameraFollow" },
+          "actor":  { "type": "string" },
+          "lerp":   { "type": "number" }
+        }
+      },
+      "moveCamera": {
+        "type": "object", "additionalProperties": false, "required": ["action"],
+        "oneOf": [{ "required": ["x"] }, { "required": ["actor"] }, { "required": ["object"] }],
+        "properties": {
+          "action": { "const": "moveCamera" },
+          "x":      { "type": "number" },
+          "actor":  { "type": "string" },
+          "object": { "type": "string" },
+          "lerp":   { "type": "number" }
+        }
+      },
+      "face": {
+        "type": "object", "additionalProperties": false, "required": ["action", "actor", "facing"],
+        "properties": {
+          "action": { "const": "face" },
+          "actor":  { "type": "string" },
+          "facing": { "$ref": "#/definitions/direction" }
+        }
+      },
+      "playMusic": {
+        "type": "object", "additionalProperties": false, "required": ["action", "music"],
+        "properties": {
+          "action":   { "const": "playMusic" },
+          "music":    { "type": "string" },
+          "loop":     { "type": "boolean" },
+          "fadeInMs": { "type": "number" }
+        }
+      },
+      "stopMusic": {
+        "type": "object", "additionalProperties": false, "required": ["action"],
+        "properties": {
+          "action":    { "const": "stopMusic" },
+          "fadeOutMs": { "type": "number" }
+        }
+      }
+    },
+
+    "item": {
+      "$comment": "An item is text or an insert, never both — the shape is the discriminator, so dispatch is on `insert` presence rather than a field const. The else branch requires `text`, so an item with neither key fails with one missing-required error. `align` shares the overlay vocabulary; an item consumes only its horizontal component.",
+      "type": "object",
+      "if": { "required": ["insert"] },
+      "then": {
+        "type": "object", "additionalProperties": false, "required": ["insert"],
+        "properties": {
+          "insert": { "type": "string" },
+          "align":  { "$ref": "#/definitions/align" },
+          "margin": { "type": "integer", "minimum": 0 }
+        }
+      },
+      "else": {
+        "type": "object", "additionalProperties": false, "required": ["text"],
+        "properties": {
+          "text":   { "$ref": "#/definitions/text" },
+          "style":  { "type": "string" },
+          "color":  { "type": "string" },
+          "align":  { "$ref": "#/definitions/align" },
+          "margin": { "type": "integer", "minimum": 0 }
+        }
+      }
+    },
+
+    "trigger": {
+      "$comment": "Per-event dispatch, mirroring `step`/`actions`: each row routes the trigger to its contract in `definitions/triggers`, the single authority for that event's required AND allowed keys. The trigger itself validates only that `on` exists and is a known event; the wrapping `if` skips dispatch entirely when `on` is missing.",
+      "type": "object",
+      "required": ["on"],
+      "properties": {
+        "on": { "enum": [
+          "sceneEnter", "flagSet", "actorEnter", "actorArrive", "actorExit", "engage",
+          "objectPickup", "objectLook", "actorLook", "objectUse", "actorUse",
+          "useObjectOnObject", "useObjectOnActor"
+        ] }
+      },
+      "if": { "required": ["on"] },
+      "then": { "allOf": [
+        { "if": { "properties": { "on": { "const": "sceneEnter" } } },        "then": { "$ref": "#/definitions/triggers/sceneEnter" } },
+        { "if": { "properties": { "on": { "const": "flagSet" } } },           "then": { "$ref": "#/definitions/triggers/flagSet" } },
+        { "if": { "properties": { "on": { "const": "actorEnter" } } },        "then": { "$ref": "#/definitions/triggers/actorEnter" } },
+        { "if": { "properties": { "on": { "const": "actorArrive" } } },       "then": { "$ref": "#/definitions/triggers/actorArrive" } },
+        { "if": { "properties": { "on": { "const": "actorExit" } } },         "then": { "$ref": "#/definitions/triggers/actorExit" } },
+        { "if": { "properties": { "on": { "const": "engage" } } },            "then": { "$ref": "#/definitions/triggers/engage" } },
+        { "if": { "properties": { "on": { "const": "objectPickup" } } },      "then": { "$ref": "#/definitions/triggers/objectPickup" } },
+        { "if": { "properties": { "on": { "const": "objectLook" } } },        "then": { "$ref": "#/definitions/triggers/objectLook" } },
+        { "if": { "properties": { "on": { "const": "actorLook" } } },         "then": { "$ref": "#/definitions/triggers/actorLook" } },
+        { "if": { "properties": { "on": { "const": "objectUse" } } },         "then": { "$ref": "#/definitions/triggers/objectUse" } },
+        { "if": { "properties": { "on": { "const": "actorUse" } } },          "then": { "$ref": "#/definitions/triggers/actorUse" } },
+        { "if": { "properties": { "on": { "const": "useObjectOnObject" } } }, "then": { "$ref": "#/definitions/triggers/useObjectOnObject" } },
+        { "if": { "properties": { "on": { "const": "useObjectOnActor" } } },  "then": { "$ref": "#/definitions/triggers/useObjectOnActor" } }
+      ] }
+    },
+
+    "triggers": {
+      "$comment": "One entry per trigger event: its complete authoring contract. Each re-declares `on` as a const (a dispatch `then` cannot see the outer property list, and it makes the contract self-contained) and rejects everything it doesn't understand.",
+      "sceneEnter": {
+        "type": "object", "additionalProperties": false, "required": ["on", "run"],
+        "properties": {
+          "on":    { "const": "sceneEnter" },
+          "run":   { "type": "string" },
+          "if":    { "$ref": "#/definitions/flagCondition" },
+          "ifNot": { "$ref": "#/definitions/flagCondition" }
+        }
+      },
+      "flagSet": {
+        "type": "object", "additionalProperties": false, "required": ["on", "run"],
+        "properties": {
+          "on":    { "const": "flagSet" },
+          "run":   { "type": "string" },
+          "flag":  { "type": ["string", "array"], "items": { "type": "string" }, "minItems": 1 },
+          "if":    { "$ref": "#/definitions/flagCondition" },
+          "ifNot": { "$ref": "#/definitions/flagCondition" }
+        }
+      },
+      "actorEnter": {
+        "type": "object", "additionalProperties": false, "required": ["on", "run"],
+        "properties": {
+          "on":    { "const": "actorEnter" },
+          "run":   { "type": "string" },
+          "actor": { "type": "string" },
+          "entry": { "type": "string" },
+          "if":    { "$ref": "#/definitions/flagCondition" },
+          "ifNot": { "$ref": "#/definitions/flagCondition" }
+        }
+      },
+      "actorArrive": {
+        "type": "object", "additionalProperties": false, "required": ["on", "run"],
+        "properties": {
+          "on":    { "const": "actorArrive" },
+          "run":   { "type": "string" },
+          "actor": { "type": "string" },
+          "entry": { "type": "string" },
+          "if":    { "$ref": "#/definitions/flagCondition" },
+          "ifNot": { "$ref": "#/definitions/flagCondition" }
+        }
+      },
+      "actorExit": {
+        "type": "object", "additionalProperties": false, "required": ["on", "run"],
+        "properties": {
+          "on":    { "const": "actorExit" },
+          "run":   { "type": "string" },
+          "actor": { "type": "string" },
+          "exit":  { "type": "string" },
+          "if":    { "$ref": "#/definitions/flagCondition" },
+          "ifNot": { "$ref": "#/definitions/flagCondition" }
+        }
+      },
+      "engage": {
+        "type": "object", "additionalProperties": false, "required": ["on", "run"],
+        "properties": {
+          "on":     { "const": "engage" },
+          "run":    { "type": "string" },
+          "object": { "type": "string" },
+          "actor":  { "type": "string" },
+          "exit":   { "type": "string" },
+          "if":     { "$ref": "#/definitions/flagCondition" },
+          "ifNot":  { "$ref": "#/definitions/flagCondition" }
+        }
+      },
+      "objectPickup": {
+        "type": "object", "additionalProperties": false, "required": ["on", "run"],
+        "properties": {
+          "on":     { "const": "objectPickup" },
+          "run":    { "type": "string" },
+          "object": { "type": "string" },
+          "if":     { "$ref": "#/definitions/flagCondition" },
+          "ifNot":  { "$ref": "#/definitions/flagCondition" }
+        }
+      },
+      "objectLook": {
+        "type": "object", "additionalProperties": false, "required": ["on", "run"],
+        "properties": {
+          "on":     { "const": "objectLook" },
+          "run":    { "type": "string" },
+          "object": { "type": "string" },
+          "if":     { "$ref": "#/definitions/flagCondition" },
+          "ifNot":  { "$ref": "#/definitions/flagCondition" }
+        }
+      },
+      "actorLook": {
+        "type": "object", "additionalProperties": false, "required": ["on", "run"],
+        "properties": {
+          "on":    { "const": "actorLook" },
+          "run":   { "type": "string" },
+          "actor": { "type": "string" },
+          "if":    { "$ref": "#/definitions/flagCondition" },
+          "ifNot": { "$ref": "#/definitions/flagCondition" }
+        }
+      },
+      "objectUse": {
+        "type": "object", "additionalProperties": false, "required": ["on", "run"],
+        "properties": {
+          "on":     { "const": "objectUse" },
+          "run":    { "type": "string" },
+          "object": { "type": "string" },
+          "if":     { "$ref": "#/definitions/flagCondition" },
+          "ifNot":  { "$ref": "#/definitions/flagCondition" }
+        }
+      },
+      "actorUse": {
+        "type": "object", "additionalProperties": false, "required": ["on", "run"],
+        "properties": {
+          "on":    { "const": "actorUse" },
+          "run":   { "type": "string" },
+          "actor": { "type": "string" },
+          "if":    { "$ref": "#/definitions/flagCondition" },
+          "ifNot": { "$ref": "#/definitions/flagCondition" }
+        }
+      },
+      "useObjectOnObject": {
+        "type": "object", "additionalProperties": false, "required": ["on", "run"],
+        "properties": {
+          "on":     { "const": "useObjectOnObject" },
+          "run":    { "type": "string" },
+          "object": { "type": "string" },
+          "target": { "type": "string" },
+          "if":     { "$ref": "#/definitions/flagCondition" },
+          "ifNot":  { "$ref": "#/definitions/flagCondition" }
+        }
+      },
+      "useObjectOnActor": {
+        "type": "object", "additionalProperties": false, "required": ["on", "run"],
+        "properties": {
+          "on":     { "const": "useObjectOnActor" },
+          "run":    { "type": "string" },
+          "object": { "type": "string" },
+          "target": { "type": "string" },
+          "if":     { "$ref": "#/definitions/flagCondition" },
+          "ifNot":  { "$ref": "#/definitions/flagCondition" }
+        }
+      }
+    },
+
+    "bark": {
+      "type": "object", "additionalProperties": false,
+      "properties": {
+        "interval": { "type": "array", "items": { "type": "number" }, "minItems": 2, "maxItems": 2 },
+        "lines":    { "type": "array", "items": { "type": "string" }, "minItems": 1 },
+        "effect":   { "$ref": "#/definitions/speechEffect" },
+        "if":       { "$ref": "#/definitions/flagCondition" },
+        "ifNot":    { "$ref": "#/definitions/flagCondition" }
+      }
+    },
+
+    "barkStream": {
+      "type": ["object", "array"],
+      "items": { "$ref": "#/definitions/bark" },
+      "minItems": 1,
+      "properties": {
+        "interval": { "type": "array", "items": { "type": "number" }, "minItems": 2, "maxItems": 2 },
+        "lines":    { "type": "array", "items": { "type": "string" }, "minItems": 1 },
+        "effect":   { "$ref": "#/definitions/speechEffect" },
+        "if":       { "$ref": "#/definitions/flagCondition" },
+        "ifNot":    { "$ref": "#/definitions/flagCondition" }
+      },
+      "additionalProperties": false
+    },
+
+    "polygon": {
+      "type": "object", "additionalProperties": false,
+      "required": ["points"],
+      "properties": {
+        "points": { "type": "array", "items": { "$ref": "#/definitions/point" } },
+        "closed": { "type": "boolean" }
+      }
+    }
+  }
+}

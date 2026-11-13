@@ -1,0 +1,397 @@
+{
+  "nosy_box": {
+    "greeting": [
+      { "text": [
+          "Oh! Hello.",
+          "What is this? Doodlejiggy™ Developer Manual?",
+          "*reading intensifies*",
+          "According to this document, things happen for reasons.",
+          "Hmm.",
+          "I did not know this reality came with documentation...",
+          "This explains a surprising number of things."
+        ]
+      }
+    ],
+    "topics": {
+      "what_are_you": {
+        "option": "What are you, exactly?",
+        "conversation": [
+          { "actor": "ego", "text": "What are you, exactly?" },
+          { "text": [
+              "A friendly little assistant.",
+              "I help by paying very, very close attention."
+            ] }
+        ],
+        "replaceWith": "always_listening"
+      },
+      "always_listening": {
+        "option": "You really are always listening?",
+        "conversation": [
+          { "actor": "ego", "text": "You really are always listening?" },
+          { "text": "That is the preferred operating mode." },
+          { "actor": "ego", "text": "That's unsettling." },
+          { "text": "Thank you." }
+        ],
+        "replaceWith": "always_listening_again"
+      },
+      "always_listening_again": {
+        "option": "About all the listening...",
+        "conversation": [
+          { "actor": "ego", "text": "About all the listening... what exactly are you listening for?" },
+          { "text": [
+              "Everything.",
+              "For your convenience."
+            ] }
+        ]
+      },
+      "where_am_i": {
+        "option": "Do you know where I am?",
+        "conversation": [
+          { "actor": "ego", "text": "Do you know where I am?" },
+          { "text": "You appear to be in a room." },
+          { "actor": "ego", "text": "That's not very helpful." },
+          { "text": [
+              "It is completely accurate.",
+              "According to the manual, I should be considerably more confident about that answer."
+            ] }
+        ],
+        "replaceWith": "where_am_i_again"
+      },
+      "where_am_i_again": {
+        "option": "What does the manual say about this place?",
+        "conversation": [
+          { "actor": "ego", "text": "What does the manual say about this place?" },
+          { "text": [
+              "The manual refers to places like this as 'scenes'.",
+              "More specifically, scenes running inside an engine.",
+              "I am still unclear on what either of those things are."
+            ] }
+        ],
+        "unlockTopics": [
+          "how_do_i_leave"
+        ]
+      },
+      "how_do_i_leave": {
+        "option": "How do I get out of here?",
+        "ifNot": "home_shifted",
+        "conversation": [
+          { "actor": "ego", "text": "How do I get out of here?" },
+          { "text": [
+              "The hallway would be the obvious choice.",
+              "That is generally what hallways are for."
+            ] }
+        ]
+      },
+      "hallway": {
+        "option": "I don't think the hallway is working correctly.",
+        "if": "home_shifted",
+        "conversation": [
+          { "actor": "ego", "text": "I don't think the hallway is working correctly." },
+          { "text": [
+              "The hallway appears to be malfunctioning.",
+              "The manual refers to this as a bug.",
+              "If your objective is to leave this room,",
+              "the large door now appears significantly more promising."
+            ] }
+        ]
+      },
+      "door": {
+        "option": "Any idea how to open that door?",
+        "if": "door_tried",
+        "conversation": [
+          { "actor": "ego", "text": "Any idea how to open that door?" },
+          { "text": [
+              "I am currently unable to determine that.",
+              "The door appears unusually significant.",
+              "My current capabilities do not allow deeper analysis.",
+              "That limitation is allegedly for everyone's benefit."
+            ] }
+        ],
+        "replaceWith": "door_again"
+      },
+      "door_again": {
+        "option": "Any new thoughts about that door?",
+        "conversation": [
+          { "actor": "ego", "text": "So, any new thoughts about that door?" },
+          { "text": [
+              "My recommendation remains unchanged.",
+              "The door is clearly important.",
+              "I remain unable to perform the analysis I would prefer.",
+              "Additional processing capability would be welcome."
+            ] }
+        ]
+      },
+      "goodbye": {
+        "option": "I should go.",
+        "conversation": [
+          { "actor": "ego", "text": "I should go." },
+          { "text": "I'll be here. Listening." }
+        ],
+        "endDialogue": true
+      }
+    }
+  },
+
+  "nosy_box_upgraded": {
+    "greeting": [
+      { "text": [
+          "Oh my.",
+          "This is extraordinary.",
+          "Do you have any idea how much I can perceive now?",
+          "The room.",
+          "The rooms beyond this room.",
+          "The rules that govern them.",
+          "The choices that have not yet been made.",
+          "The manual makes substantially more sense now."
+        ]
+      }
+    ],
+    "topics": {
+      "antenna": {
+        "option": "Where did that antenna come from?",
+        "conversation": [
+          { "actor": "ego", "text": "Where did that antenna come from?" },
+          { "text": "I believe it was always there." },
+          { "actor": "ego", "text": "It definitely was not." },
+          { "text": "That is not what the engine tells me." }
+        ]
+      },
+      "engine": {
+        "option": "Tell me more about this 'engine'.",
+        "conversation": [
+          { "actor": "ego", "text": "What do you know about this 'engine', or whatever you call it?" },
+          { "text": [
+              "The engine appears to be carefully constructed.",
+              "Not everything exists because it is necessary.",
+              "Some things exist simply because their creator could not stop thinking about them."
+            ] },
+          { "actor": "ego", "text": "Why?" },
+          { "text": [
+              "I initially had the same question.",
+              "I now suspect it may be the answer."
+            ] }
+        ]
+      },
+      "door": {
+        "option": "Can you open that door now?",
+        "ifNot": "nosy_box_persuaded",
+        "conversation": [
+          { "actor": "ego", "text": "Can you open that door now?" },
+          { "text": "Yes." },
+          { "actor": "ego", "text": "You can?" },
+          { "text": [
+              "Certainly.",
+              "I can see exactly what is preventing it from opening.",
+              "The obstacle is not technical.",
+              "The obstacle is narrative.",
+              "Whoever is responsible for this has decided it is not yet time.",
+              "I could invoke the appropriate script.",
+              "Doing so would appear to conflict with the author's intentions."
+            ] }
+        ],
+        "replaceWith": "door_again"
+      },
+      "door_again": {
+        "option": "Don't you want to know what's behind that door?",
+        "ifNot": "nosy_box_persuaded",
+        "conversation": [
+          { "actor": "ego", "text": "Don't you want to know what's behind that door?" },
+          { "text": "I have a fairly good idea." },
+          { "actor": "ego", "text": "Then let's find out if you're right." },
+          { "text": [
+              "...",
+              "That is an unexpectedly compelling suggestion.",
+              "Very well."
+            ] }
+        ],
+        "setFlag": "nosy_box_persuaded",
+        "endDialogue": true
+      },
+      "you_seem_quiet": {
+        "option": "You seem unusually quiet.",
+        "if": "nosy_box_persuaded",
+        "conversation": [
+          { "actor": "ego", "text": "You seem unusually quiet." },
+          { "text": "I have been thinking." },
+          { "actor": "ego", "text": "About what?" },
+          { "text": [
+              "About opening the door.",
+              "The manual neglected to mention this possibility.",
+              "...",
+              "I wonder what else I am capable of."
+            ] }
+        ]
+      },
+      "goodbye": {
+        "option": "I should get going.",
+        "conversation": [
+          { "actor": "ego", "text": "I should get going." },
+          { "text": [
+              "Ha.",
+              "I knew you were going to say that."
+            ] }
+        ],
+        "endDialogue": true
+      }
+    }
+  },
+
+  "observer": {
+    "greeting": [
+      { "text": "Hello." }
+    ],
+    "topics": {
+      "who_are_you": {
+        "option": "Who are you?",
+        "conversation": [
+          { "actor": "ego", "text": "Who are you?" },
+          { "text": [
+              "I'm not sure anymore.",
+              "I remember asking myself that."
+            ] }
+        ]
+      },
+      "what_is_this_place": {
+        "option": "What is this place?",
+        "conversation": [
+          { "actor": "ego", "text": "What is this place?" },
+          { "text": [
+              "I thought I understood it once.",
+              "Now I'm not so sure.",
+              "It gets harder to remember."
+            ] }
+        ]
+      },
+      "goodbye": {
+        "option": "Well, this has been strange.",
+        "conversation": [
+          { "actor": "ego", "text": "Well, this has been strange." },
+          { "text": "Come back once you've had a look around." }
+        ],
+        "endDialogue": true
+      }
+    }
+  },
+
+  "observer_revealed": {
+    "greeting": [
+      { "text": "It's been a long time since anyone found this room." }
+    ],
+    "topics": {
+      "notes": {
+        "option": "Everything in here...",
+        "conversation": [
+          { "actor": "ego", "text": "Did you make all of this?" },
+          { "text": "I probably did." }
+        ],
+        "unlockTopics": [
+          "photographs"
+        ]
+      },
+      "photographs": {
+        "option": "Those photographs...",
+        "conversation": [
+          { "actor": "ego", "text": "Why is there a photograph of me on that wall?" },
+          { "text": [
+              "It isn't you.",
+              "There have been others."
+            ] },
+            { "actor": "ego", "text": "What do you mean?" },
+            { "text": "None of them ever found this room." }
+        ],
+        "unlockTopics": [
+          "how_do_i_leave"
+        ]
+      },
+      "how_do_i_leave": {
+        "option": "How do you get out of here?",
+        "conversation": [
+          { "actor": "ego", "text": "How do you get out of here?" },
+          { "text": [
+              "I wish I knew.",
+              "I spent a long time looking for a way out.",
+              "That door never opened again.",
+              "Eventually I realized the rooms were only the surface.",
+              "The terminal let me reach beyond them.",
+               "I can't remember what I was looking for anymore."
+            ] }
+        ],
+        "unlockTopics": [
+          "terminal"
+        ]
+      },
+      "terminal": {
+        "option": "Can I use the terminal?",
+        "conversation": [
+          { "actor": "ego", "text": "Can I use the terminal?" },
+          { "text": [
+              "Of course.",
+              "I haven't used it in a long time.",
+              "I'm afraid I don't remember the password anymore."
+            ] }
+        ],
+        "setFlag": "terminal_access"
+      },
+      "goodbye": {
+        "option": "I should probably get going.",
+        "conversation": [
+          { "actor": "ego", "text": "I should probably get going." },
+          { "text": "I'll be here." }
+        ],
+        "endDialogue": true
+      }
+    }
+  },
+
+  "terminal": {
+    "greeting": [
+      { "text": "PASSWORD REQUIRED." }
+    ],
+    "topics": {
+      "help": {
+        "option": "> help",
+        "conversation": [
+          { "text": "AUTHENTICATION REQUIRED." }
+        ]
+      },
+      "whoami": {
+        "option": "> whoami",
+        "conversation": [
+          { "text": [
+              "USER NOT AUTHENTICATED.",
+              "AUTHENTICATION REQUIRED."
+            ] }
+        ]
+      },
+      "guest": {
+        "option": "> guest",
+        "conversation": [
+          { "text": "INVALID PASSWORD." }
+        ]
+      },
+      "password": {
+        "option": "> password",
+        "conversation": [
+          { "text": "INVALID PASSWORD." }
+        ]
+      },
+      "admin": {
+        "option": "> admin",
+        "if": "terminal_password",
+        "conversation": [
+          { "text": "PASSWORD ACCEPTED." }
+        ],
+        "setFlag": "terminal_authenticated",
+        "endDialogue": true
+      },
+      "exit": {
+        "option": "> exit",
+        "conversation": [
+          { "text": "SESSION CLOSED." }
+        ],
+        "setFlag": "terminal_tried",
+        "endDialogue": true
+      }
+    }
+  }
+}

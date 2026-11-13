@@ -1,0 +1,113 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "actors.json",
+  "type": "object",
+  "additionalProperties": { "$ref": "#/definitions/actor" },
+  "definitions": {
+    "direction": { "enum": ["north", "south", "east", "west"] },
+    "interaction": { "enum": ["look", "pickup", "use", "talk", "none"] },
+    "plane": { "enum": ["normal", "surface", "flat"] },
+    "scaling": { "enum": ["scene", "fixed"] },
+    "speechEffect": { "enum": ["jitter", "shake", "crt", "wobble"] },
+    "text": { "type": ["string", "array"], "items": { "type": "string" }, "minItems": 1 },
+
+    "rows": {
+      "type": "object", "additionalProperties": false, "required": ["north", "south", "east", "west"],
+      "properties": {
+        "north": { "type": "number" },
+        "south": { "type": "number" },
+        "east":  { "type": "number" },
+        "west":  { "type": "number" }
+      }
+    },
+    "animBlock": {
+      "$comment": "A block is either directional (`rows`, all four cardinals) or non-directional (`row`) — exactly one, never a mix, so resolution needs no per-direction fallback.",
+      "type": "object", "additionalProperties": false,
+      "oneOf": [{ "required": ["rows"] }, { "required": ["row"] }],
+      "properties": {
+        "frames":     { "type": "integer", "minimum": 1 },
+        "startFrame": { "type": "number" },
+        "frameMs":    { "type": "number" },
+        "jitterMs":   { "type": "number" },
+        "pauseMs":    { "type": "number" },
+        "loop":       { "type": "boolean" },
+        "reverse":    { "type": "boolean" },
+        "rows":       { "$ref": "#/definitions/rows" },
+        "row":        { "type": "number" }
+      }
+    },
+
+    "actor": {
+      "type": "object", "additionalProperties": false,
+      "dependencies": { "states": ["initialState"] },
+      "if":   { "required": ["states"] },
+      "then": true,
+      "else": {
+        "if":   { "required": ["sprite"] },
+        "then": { "required": ["sprite", "speed", "idle"] }
+      },
+      "properties": {
+        "title":         { "type": "string" },
+        "description":   { "$ref": "#/definitions/text" },
+        "interaction":   { "$ref": "#/definitions/interaction" },
+        "facing":        { "$ref": "#/definitions/direction" },
+        "plane":         { "$ref": "#/definitions/plane" },
+        "scaling":       { "$ref": "#/definitions/scaling" },
+        "sprite":        { "type": "string" },
+        "height":        { "type": "number" },
+        "offsetX":       { "type": "number" },
+        "offsetY":       { "type": "number" },
+        "approachX":     { "type": "number" },
+        "approachY":     { "type": "number" },
+        "speed":         { "type": "number" },
+        "speechColor":   { "type": "string" },
+        "speechEffect":  { "$ref": "#/definitions/speechEffect" },
+        "speechOffsetX": { "type": "number" },
+        "speechOffsetY": { "type": "number" },
+        "dialogue":      { "type": "string" },
+        "talkText":      { "$ref": "#/definitions/text" },
+        "walk":          { "$ref": "#/definitions/animBlock" },
+        "idle":          { "$ref": "#/definitions/animBlock" },
+        "talk":          { "$ref": "#/definitions/animBlock" },
+        "animations": {
+          "type": "object",
+          "additionalProperties": { "$ref": "#/definitions/animBlock" }
+        },
+        "initialState":  { "type": "string" },
+        "states": {
+          "type": "object",
+          "additionalProperties": { "$ref": "#/definitions/state" }
+        }
+      }
+    },
+    "state": {
+      "type": "object", "additionalProperties": false,
+      "properties": {
+        "title":         { "type": ["string", "null"] },
+        "sprite":        { "type": ["string", "null"] },
+        "height":        { "type": ["number", "null"] },
+        "offsetX":       { "type": ["number", "null"] },
+        "offsetY":       { "type": ["number", "null"] },
+        "speed":         { "type": ["number", "null"] },
+        "interaction":   { "enum": ["look", "pickup", "use", "talk", "none", null] },
+        "facing":        { "enum": ["north", "south", "east", "west", null] },
+        "description":   { "anyOf": [{ "type": "null" }, { "$ref": "#/definitions/text" }] },
+        "dialogue":      { "type": ["string", "null"] },
+        "talkText":      { "anyOf": [{ "type": "null" }, { "$ref": "#/definitions/text" }] },
+        "speechColor":   { "type": ["string", "null"] },
+        "speechEffect":  { "enum": ["jitter", "shake", "crt", "wobble", null] },
+        "speechOffsetX": { "type": ["number", "null"] },
+        "speechOffsetY": { "type": ["number", "null"] },
+        "plane":         { "enum": ["normal", "surface", "flat", null] },
+        "scaling":       { "enum": ["scene", "fixed", null] },
+        "walk":          { "anyOf": [{ "type": "null" }, { "$ref": "#/definitions/animBlock" }] },
+        "idle":          { "anyOf": [{ "type": "null" }, { "$ref": "#/definitions/animBlock" }] },
+        "talk":          { "anyOf": [{ "type": "null" }, { "$ref": "#/definitions/animBlock" }] },
+        "animations": {
+          "type": ["object", "null"],
+          "additionalProperties": { "$ref": "#/definitions/animBlock" }
+        }
+      }
+    }
+  }
+}

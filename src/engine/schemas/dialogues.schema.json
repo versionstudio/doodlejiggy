@@ -1,0 +1,49 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "dialogues.json",
+  "type": "object",
+  "additionalProperties": { "$ref": "#/definitions/dialogue" },
+  "definitions": {
+    "flagCondition": { "type": ["string", "array"], "items": { "type": "string" }, "minItems": 1 },
+    "speechEffect": { "enum": ["jitter", "shake", "crt", "wobble"] },
+    "text": { "type": ["string", "array"], "items": { "type": "string" }, "minItems": 1 },
+
+    "line": {
+      "type": "object", "additionalProperties": false, "required": ["text"],
+      "properties": {
+        "actor":  { "type": "string" },
+        "text":   { "$ref": "#/definitions/text" },
+        "effect": { "$ref": "#/definitions/speechEffect" }
+      }
+    },
+    "lines": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/line" }
+    },
+
+    "topic": {
+      "type": "object", "additionalProperties": false, "required": ["option"],
+      "properties": {
+        "option":       { "type": "string" },
+        "conversation": { "$ref": "#/definitions/lines" },
+        "setFlag":      { "type": "string" },
+        "replaceWith":  { "type": "string" },
+        "unlockTopics": { "type": "array", "items": { "type": "string" } },
+        "removeAfter":  { "type": "boolean" },
+        "endDialogue":  { "type": "boolean" },
+        "if":           { "$ref": "#/definitions/flagCondition" },
+        "ifNot":        { "$ref": "#/definitions/flagCondition" }
+      }
+    },
+    "dialogue": {
+      "type": "object", "additionalProperties": false,
+      "properties": {
+        "greeting": { "$ref": "#/definitions/lines" },
+        "topics": {
+          "type": "object",
+          "additionalProperties": { "$ref": "#/definitions/topic" }
+        }
+      }
+    }
+  }
+}

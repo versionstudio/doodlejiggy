@@ -1,0 +1,86 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "objects.json",
+  "type": "object",
+  "additionalProperties": { "$ref": "#/definitions/object" },
+  "definitions": {
+    "direction": { "enum": ["north", "south", "east", "west"] },
+    "interaction": { "enum": ["look", "pickup", "use", "talk", "none"] },
+    "plane": { "enum": ["normal", "surface", "flat"] },
+    "point": { "type": "array", "items": { "type": "number" }, "minItems": 2, "maxItems": 2 },
+    "speechEffect": { "enum": ["jitter", "shake", "crt", "wobble"] },
+    "text": { "type": ["string", "array"], "items": { "type": "string" }, "minItems": 1 },
+
+    "transitions": {
+      "type": "object", "additionalProperties": false,
+      "properties": {
+        "look":   { "type": "string" },
+        "pickup": { "type": "string" }
+      }
+    },
+
+    "object": {
+      "type": "object", "additionalProperties": false,
+      "dependencies": { "states": ["initialState"] },
+      "properties": {
+        "title":         { "type": "string" },
+        "description":   { "$ref": "#/definitions/text" },
+        "interaction":   { "$ref": "#/definitions/interaction" },
+        "facing":        { "$ref": "#/definitions/direction" },
+        "plane":         { "$ref": "#/definitions/plane" },
+        "sprite":        { "type": "string" },
+        "height":        { "type": "number" },
+        "offsetX":       { "type": "number" },
+        "offsetY":       { "type": "number" },
+        "speechColor":   { "type": "string" },
+        "speechEffect":  { "$ref": "#/definitions/speechEffect" },
+        "speechOffsetX": { "type": "number" },
+        "speechOffsetY": { "type": "number" },
+        "icon":          { "type": "string" },
+        "hotspot":       { "type": "array", "items": { "$ref": "#/definitions/point" }, "minItems": 3 },
+        "frames":        { "type": "integer", "minimum": 1 },
+        "startFrame":    { "type": "number" },
+        "frameMs":       { "type": "number" },
+        "jitterMs":      { "type": "number" },
+        "row":           { "type": "number" },
+        "loop":          { "type": "boolean" },
+        "reverse":       { "type": "boolean" },
+        "pickupText":    { "$ref": "#/definitions/text" },
+        "transitions":   { "$ref": "#/definitions/transitions" },
+        "initialState":  { "type": "string" },
+        "states": {
+          "type": "object",
+          "additionalProperties": { "$ref": "#/definitions/state" }
+        }
+      }
+    },
+    "state": {
+      "type": "object", "additionalProperties": false,
+      "properties": {
+        "title":         { "type": ["string", "null"] },
+        "description":   { "anyOf": [{ "type": "null" }, { "$ref": "#/definitions/text" }] },
+        "interaction":   { "enum": ["look", "pickup", "use", "talk", "none", null] },
+        "facing":        { "enum": ["north", "south", "east", "west", null] },
+        "plane":         { "enum": ["normal", "surface", "flat", null] },
+        "sprite":        { "type": ["string", "null"] },
+        "height":        { "type": ["number", "null"] },
+        "offsetX":       { "type": ["number", "null"] },
+        "offsetY":       { "type": ["number", "null"] },
+        "speechColor":   { "type": ["string", "null"] },
+        "speechEffect":  { "enum": ["jitter", "shake", "crt", "wobble", null] },
+        "speechOffsetX": { "type": ["number", "null"] },
+        "speechOffsetY": { "type": ["number", "null"] },
+        "icon":          { "type": ["string", "null"] },
+        "frames":        { "type": ["integer", "null"], "minimum": 1 },
+        "startFrame":    { "type": ["number", "null"] },
+        "frameMs":       { "type": ["number", "null"] },
+        "jitterMs":      { "type": ["number", "null"] },
+        "row":           { "type": ["number", "null"] },
+        "loop":          { "type": ["boolean", "null"] },
+        "reverse":       { "type": ["boolean", "null"] },
+        "pickupText":    { "anyOf": [{ "type": "null" }, { "$ref": "#/definitions/text" }] },
+        "transitions":   { "anyOf": [{ "type": "null" }, { "$ref": "#/definitions/transitions" }] }
+      }
+    }
+  }
+}

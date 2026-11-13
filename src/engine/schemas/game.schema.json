@@ -1,0 +1,139 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "game.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["scenes", "start"],
+  "properties": {
+    "player":   { "type": "string" },
+    "scenes":   { "type": "array", "items": { "type": "string" }, "minItems": 1, "uniqueItems": true },
+    "start":    { "$ref": "#/definitions/start" },
+    "theme":    { "$ref": "#/definitions/theme" },
+    "messages": { "$ref": "#/definitions/messages" }
+  },
+  "definitions": {
+    "hotspot": { "type": "array", "items": { "type": "integer", "minimum": 0 }, "minItems": 2, "maxItems": 2 },
+    "text": { "type": ["string", "array"], "items": { "type": "string" }, "minItems": 1 },
+
+    "start": {
+      "type": "object", "additionalProperties": false, "required": ["scene", "entry"],
+      "properties": {
+        "scene": { "type": "string" },
+        "entry": { "type": "string" }
+      }
+    },
+
+    "theme": {
+      "$comment": "colors, fonts, and styles are open maps — games invent the names, over a minimal guaranteed vocabulary per surface. The schema never injects defaults — each surface's engine default lives beside its setter in the presentation module that draws it (render.js for canvas, ui.js for the DOM). Font-role references (a text surface's `font`) are semantically validated at boot; an open set cannot be a schema enum.",
+      "type": "object", "additionalProperties": false,
+      "properties": {
+        "colors": {
+          "type": "object",
+          "additionalProperties": { "type": "string" }
+        },
+        "fonts": {
+          "type": "object",
+          "additionalProperties": { "type": "string" }
+        },
+        "interface": { "$ref": "#/definitions/interface" },
+        "speech":    { "$ref": "#/definitions/speech" },
+        "topics":    { "$ref": "#/definitions/topics" },
+        "verb":      { "$ref": "#/definitions/verb" },
+        "styles": {
+          "type": "object",
+          "additionalProperties": { "$ref": "#/definitions/style" }
+        }
+      }
+    },
+    "interface": {
+      "$comment": "Closed, unlike the open maps above: the engine owns each slot, so a game replaces an engine-drawn element but cannot invent new ones.",
+      "type": "object", "additionalProperties": false,
+      "properties": {
+        "scanMarker":         { "type": "string" },
+        "cursor":             { "type": "string" },
+        "cursorHotspot":      { "$ref": "#/definitions/hotspot" },
+        "cursorHover":        { "type": "string" },
+        "cursorHoverHotspot": { "$ref": "#/definitions/hotspot" }
+      }
+    },
+    "speech": {
+      "$comment": "One typography vocabulary spans the four text surfaces (speech, topics, verb, style). Each contract re-declares every field: draft-07 cannot see through a $ref to close an object, and self-containment is worth the repetition. speech, topics, and verb are flat knob maps — every field individually optional with an engine default, so nothing is required.",
+      "type": "object", "additionalProperties": false,
+      "properties": {
+        "font":         { "type": "string" },
+        "size":         { "type": "number", "exclusiveMinimum": 0 },
+        "color":        { "type": "string" },
+        "lineHeight":   { "type": "number", "exclusiveMinimum": 0 },
+        "width":        { "type": "number", "exclusiveMinimum": 0 },
+        "outlineColor": { "type": "string" },
+        "outlineWidth": { "type": "number", "minimum": 0 }
+      }
+    },
+    "topics": {
+      "$comment": "activeColor is the one field outside the shared vocabulary: the topic list is the only text surface with a selected state.",
+      "type": "object", "additionalProperties": false,
+      "properties": {
+        "font":         { "type": "string" },
+        "size":         { "type": "number", "exclusiveMinimum": 0 },
+        "color":        { "type": "string" },
+        "activeColor":  { "type": "string" },
+        "lineHeight":   { "type": "number", "exclusiveMinimum": 0 },
+        "width":        { "type": "number", "exclusiveMinimum": 0 },
+        "outlineColor": { "type": "string" },
+        "outlineWidth": { "type": "number", "minimum": 0 }
+      }
+    },
+    "verb": {
+      "type": "object", "additionalProperties": false,
+      "properties": {
+        "font":         { "type": "string" },
+        "size":         { "type": "number", "exclusiveMinimum": 0 },
+        "color":        { "type": "string" },
+        "lineHeight":   { "type": "number", "exclusiveMinimum": 0 },
+        "width":        { "type": "number", "exclusiveMinimum": 0 },
+        "outlineColor": { "type": "string" },
+        "outlineWidth": { "type": "number", "minimum": 0 }
+      }
+    },
+    "style": {
+      "$comment": "Atomic definition: the required trio is the style's identity and replaces the engine entry whole; the optional metrics fall back to the consuming renderer's defaults.",
+      "type": "object", "additionalProperties": false, "required": ["font", "size", "color"],
+      "properties": {
+        "font":         { "type": "string" },
+        "size":         { "type": "number", "exclusiveMinimum": 0 },
+        "color":        { "type": "string" },
+        "lineHeight":   { "type": "number", "exclusiveMinimum": 0 },
+        "width":        { "type": "number", "exclusiveMinimum": 0 },
+        "outlineColor": { "type": "string" },
+        "outlineWidth": { "type": "number", "minimum": 0 }
+      }
+    },
+    "messages": {
+      "type": "object", "additionalProperties": false,
+      "properties": {
+        "templates": {
+          "type": "object", "additionalProperties": false,
+          "properties": {
+            "look":               { "type": "string" },
+            "pickup":             { "type": "string" },
+            "use":                { "type": "string" },
+            "talk":               { "type": "string" },
+            "useObjectOn":        { "type": "string" },
+            "useObjectOnPending": { "type": "string" },
+            "portalExit":         { "type": "string" }
+          }
+        },
+        "fallbacks": {
+          "type": "object", "additionalProperties": false,
+          "properties": {
+            "pickup":        { "$ref": "#/definitions/text" },
+            "use":           { "$ref": "#/definitions/text" },
+            "useOnObject":   { "$ref": "#/definitions/text" },
+            "useOnActor":    { "$ref": "#/definitions/text" },
+            "portalBlocked": { "$ref": "#/definitions/text" }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,124 @@
+{
+  "player": "ego",
+
+  "scenes": [
+    "home",
+    "chamber",
+    "epilogue"
+  ],
+
+  "start": {
+    "scene": "home",
+    "entry": "start"
+  },
+
+  "theme": {
+    "colors": {
+      "cyan": "#55ffff",
+      "grey": "#cfcfcf",
+      "lime": "#55ff55",
+      "pink": "#ff55ff",
+      "purple": "#cc00cc",
+      "red": "#ff5555",
+      "yellow": "#ffff55"
+    },
+
+    "fonts": {
+      "dialog": "ScummDialog",
+      "solid": "ScummSolid"
+    },
+
+    "interface": {
+      "scanMarker": "scan.png",
+      "cursor": "cursor.png"
+    },
+
+    "speech": {
+      "font": "dialog",
+      "size": 0.03,
+      "color": "white",
+      "lineHeight": 1.35,
+      "width": 0.7,
+      "outlineColor": "black",
+      "outlineWidth": 9
+    },
+
+    "topics": {
+      "font": "solid",
+      "size": 0.03,
+      "color": "grey",
+      "activeColor": "white",
+      "lineHeight": 1.15
+    },
+
+    "verb": {
+      "font": "solid",
+      "size": 0.03,
+      "color": "white",
+      "lineHeight": 1.0
+    },
+
+    "styles": {
+      "default": { 
+        "font": "dialog", 
+        "size": 0.045, 
+        "color": "white", 
+        "lineHeight": 1.25, 
+        "width": 0.72 
+      },
+      "title": { 
+        "font": "solid", 
+        "size": 0.065, 
+        "color": "white", 
+        "lineHeight": 1.00, 
+        "width": 0.72 
+      },
+      "small": {
+        "font": "dialog",
+        "size": 0.032,
+        "color": "white",
+        "lineHeight": 1.7,
+        "width": 0.60
+      }
+    }
+  },
+
+  "messages": {
+    "templates": {
+      "look": "{target}",
+      "pickup": "Pick up {target}",
+      "use": "Use {target}",
+      "talk": "Talk to {target}",
+      "useObjectOn": "Use {object} on {target}",
+      "useObjectOnPending": "Use {object} on ...",
+      "portalExit": "Walk to {target}"
+    },
+
+    "fallbacks": {
+      "pickup": [
+        "I can't pick that up.",
+        "That seems difficult to carry.",
+        "That would create several logistical issues."
+      ],
+      "use": [
+        "That doesn't seem useful here.",
+        "Nothing happened.",
+        "That didn't accomplish much."
+      ],
+      "useOnObject": [
+        "That doesn't seem to work.",
+        "I don't think that's how that works.",
+        "That doesn't seem to do anything."
+      ],
+      "useOnActor": [
+        "Apparently that's not helpful.",
+        "I don't think they trust me with that.",
+        "I'm not sure that's a good idea."
+      ],
+      "portalBlocked": [
+        "I can't go that way right now.",
+        "Not yet."
+      ]
+    }
+  }
+}

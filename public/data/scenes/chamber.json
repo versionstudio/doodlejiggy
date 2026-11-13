@@ -1,0 +1,408 @@
+{
+  "world": {
+    "backdrop": "chamber.png"
+  },
+
+  "scaling": {
+    "near": {
+      "y": 299,
+      "scale": 0.9
+    },
+
+    "far": {
+      "y": 174,
+      "scale": 0.61
+    }
+  },
+
+  "portals": {
+    "entries": {
+      "from_home": {
+        "x": 340,
+        "y": 295,
+        "facing": "north",
+        "walk": "north"
+      }
+    },
+
+    "exits": {
+      "to_home": {
+        "title": "Exit",
+        "destination": {
+          "scene": "home",
+          "entry": "from_chamber"
+        },
+        "walk": "south",
+        "hotspot": [
+          [378, 301],
+          [302, 301],
+          [302, 320],
+          [378, 320]
+        ]
+      }
+    }
+  },
+
+  "objects": {
+    "terminal_console": {
+      "x": 292,
+      "y": 193,
+      "hotspot": [
+        [-18.07106598984774, -37.766497461928935],
+        [-18.07106598984774, -9.340101522842616],
+        [-22.538071065989868, -0.4060913705583573],
+        [22.53807106598981, 0],
+        [17.664974619289296, -9.746192893401002],
+        [17.520304568527877, -37.299492385786806]
+      ]
+    },
+
+    "whiteboard": {
+      "x": 193,
+      "y": 260,
+      "hotspot": [
+        [-32.69035532994923, -199.28187054522505],
+        [-33.09644670050761, -98.90155440414509],
+        [-19.361532861853334, -99.23604961267856],
+        [-14.401499673526132, -117.66227857699516],
+        [-6.859672402777477, -120.38745778657736],
+        [-5.95684928140642, -147.0130519339189],
+        [10.489851226207776, -146.8487618566183],
+        [11.273212994362183, -121.15740955269573],
+        [18.695578911894188, -118.03867135665695],
+        [25.130905491079886, -103.75011247151292],
+        [32.69035532994923, -104.13866021409223],
+        [32.28426395939087, -177.7253622997817]
+      ]
+    },
+
+    "photographs": {
+      "x": 292,
+      "y": 140,
+      "hotspot": [
+        [-43.24873096446701, -46.700507614213194],
+        [-37.360406091370606, 0.40609137055838573],
+        [-8.52791878172593, -2.639593908629479],
+        [15.837563451776646, -2.4365482233502576],
+        [43.24873096446702, -13.807106598984774],
+        [42.63959390862942, -34.11167512690356],
+        [20.88832487309648, -36.8781725888325],
+        [4.961928934010132, -46.662436548223354]
+      ]
+    },
+
+    "clues": {
+      "x": 385,
+      "y": 156,
+      "hotspot": [
+        [-26.192893401015226, -64.16243654822335],
+        [-30.659898477157356, -40.609137055837564],
+        [-2.639593908629422, -1.6243654822335145],
+        [30.659898477157412, 0],
+        [30.5583756345178, -13.197969543147224],
+        [16.928934010152318, -11.116751269035518],
+        [18.032994923857927, -24.086294416243646],
+        [30.10152284263961, -25.685279187817258],
+        [30.45685279187819, -41.82741116751269],
+        [30.253807106599027, -83.65482233502539],
+        [-0.8121827411167715, -71.47208121827411],
+        [-2.6015228426396106, -62.385786802030466],
+        [-12.081218274111677, -60.50761421319798],
+        [-19.13705583756348, -64.36548223350255]
+      ]
+    },
+
+    "markers": {
+      "x": 332,
+      "y": 187,
+      "hotspot": [
+        [-6.294416243654837, -17.055837563451774],
+        [-3.857868020304579, -0.4060913705583573],
+        [3.857868020304579, 0],
+        [6.294416243654837, -17.868020304568518]
+      ]
+    },
+
+    "dark_corner": {
+      "x": 511,
+      "y": 304,
+      "hotspot": [
+        [-22.76843467011639, -128.7451487710219],
+        [22.76843467011639, -128.7451487710219],
+        [22.76843467011639, 0],
+        [-22.76843467011639, 0]
+      ]
+    }
+  },
+
+  "triggers": [
+    { "on": "sceneEnter", "run": "scene_setup" },
+    { "on": "actorArrive", "actor": "ego", "entry": "from_home", "ifNot": "chamber_remark_done", "run": "chamber_remark" },
+    { "on": "engage", "exit": "to_home", "if": "terminal_tried", "ifNot": "terminal_password", "run": "nosy_box_entrance" },
+    { "on": "objectLook", "object": "whiteboard", "ifNot": "whiteboard_seen", "run": "whiteboard_examine" },
+    { "on": "objectLook", "object": "photographs", "ifNot": "photographs_seen", "run": "photographs_examine" },
+    { "on": "objectLook", "object": "clues", "ifNot": "clues_seen", "run": "clues_examine" },
+    { "on": "objectUse", "object": "terminal_console", "ifNot": "terminal_access", "run": "terminal_examine" },
+    { "on": "objectUse", "object": "terminal_console", "if": "terminal_access", "run": "terminal_use" },
+    { "on": "flagSet", "flag": "terminal_authenticated", "run": "terminal_sequence" },
+    { "on": "flagSet", "flag": ["whiteboard_seen","photographs_seen","clues_seen"], "ifNot": "observer_revealed", "run": "observer_reveal" }
+  ],
+
+  "scripts": {
+    "scene_setup": {
+      "steps": [
+        { "action": "spawnObject", "object": "doorway_light", "x": 300, "y": 319.7 },
+        { "action": "spawnActor", "actor": "observer", "x": 195, "y": 250 },
+        { "action": "spawnActor", "actor": "terminal", "x": 291, "y": 180 }
+      ]
+    },
+
+    "chamber_remark": {
+      "cutscene": true,
+      "steps": [
+        { "action": "wait", "seconds": 0.5 },
+        { "action": "say", "object": "terminal", "text": "CHAMBER ACCESS ENABLED." },
+        { "action": "wait", "seconds": 0.5 },
+        { "action": "say", "actor": "ego", "text": "What... is this place?" },
+        { "action": "wait", "seconds": 0.9 },
+        { "action": "cameraFollow", "actor": "observer", "lerp": 2 },
+        { "action": "say", "actor": "observer", "text": "I've had a long time to think about that." },
+        { "action": "cameraFollow", "actor": "ego", "lerp": 2 },
+        { "action": "setFlag", "flag": "chamber_remark_done" }
+      ]
+    },
+
+    "whiteboard_examine": {
+      "steps": [
+        { "action": "setFlag", "flag": "whiteboard_seen" }
+      ]
+    },
+
+    "photographs_examine": {
+      "steps": [
+        { "action": "setFlag", "flag": "photographs_seen" }
+      ]
+    },
+
+    "clues_examine": {
+      "steps": [
+        { "action": "setFlag", "flag": "clues_seen" }
+      ]
+    },
+
+    "terminal_examine": {
+      "cutscene": true,
+      "steps": [
+        { "action": "say", "actor": "ego", "text": "I don't think it'd be polite to use someone else's terminal." },
+        { "action": "say", "actor": "ego", "text": "Especially while they're standing right there." }
+      ]
+    },
+
+    "terminal_use": {
+      "steps": [
+        { "action": "talkTo", "target": "terminal" }
+      ]
+    },
+
+    "terminal_sequence": {
+      "cutscene": true,
+      "steps": [
+        { "action": "wait", "seconds": 1 },
+        { "action": "say", "actor": "ego", "text": "...You're kidding." },
+        { "action": "wait", "seconds": 0.4 },
+        { "action": "say", "actor": "terminal", "text": "IDENTIFICATION..." },
+        { "action": "wait", "seconds": 1 },
+        { "action": "say", "actor": "terminal", "text": "WELCOME BACK." },
+        { "action": "wait", "seconds": 0.4 },
+        { "action": "say", "actor": "ego", "text": "Welcome back?" },
+        { "action": "wait", "seconds": 0.6 },
+        { "action": "say", "actor": "terminal", "text": "ITERATION COMPLETE." },
+        { "action": "wait", "seconds": 1 },
+        { "action": "say", "actor": "terminal", "text": "ACTIVATING CELEBRATION PROTOCOL." },
+        { "action": "wait", "seconds": 0.8 },
+        { "action": "spawnObject", "object": "confetti", "x": 287, "y": 178, "persist": false },
+        { "action": "waitForAnimation", "object": "confetti" },
+        { "action": "removeObject", "object": "confetti" },
+        { "action": "wait", "seconds": 1 },
+        { "action": "face", "actor": "ego", "facing": "south" },
+        { "action": "wait", "seconds": 0.5 },
+        { "action": "say", "actor": "ego", "text": "Uh... what is happening?" },
+        { "action": "wait", "seconds": 1 },
+        { "action": "say", "actor": "terminal", "text": "LAST ITERATION RUNTIME: 3,847 YEARS." },
+        { "action": "wait", "seconds": 0.5 },
+        { "action": "say", "actor": "terminal", "text": "SUCCESS CONDITIONS MET." },
+        { "action": "face", "actor": "ego", "facing": "west" },
+        { "action": "wait", "seconds": 0.8 },
+        { "action": "say", "actor": "terminal", "text": "PREPARING NEXT ITERATION." },
+        { "action": "wait", "seconds": 0.5 },
+        { "action": "walkTo", "actor": "ego", "x": 243, "y": 250 },
+        { "action": "wait", "seconds": 1 },
+        { "action": "say", "actor": "ego", "text": "Hey you." },
+        { "action": "wait", "seconds": 0.4 },
+        { "action": "say", "actor": "ego", "text": "What is happening?" },
+        { "action": "wait", "seconds": 0.8 },
+        { "action": "say", "actor": "terminal", "text": "SECURING CHAMBER ACCESS." },
+        { "action": "face", "actor": "ego", "facing": "south" },
+        { "action": "wait", "seconds": 0.7 },
+        { "action": "removeObject", "object": "doorway_light" },
+        { "action": "wait", "seconds": 1 },
+        { "action": "say", "actor": "ego", "text": "Did it just lock me in?" },
+        { "action": "wait", "seconds": 0.8 },
+        { "action": "say", "actor": "terminal", "text": "ACTIVATING SUCCESSION PROTOCOL." },
+        { "action": "wait", "seconds": 0.8 },
+        { "action": "teleport", "actor": "observer", "x": 195, "y": 251 },
+        { "action": "wait", "seconds": 0.06 },
+        { "action": "removeActor", "actor": "observer" },
+        { "action": "wait", "seconds": 0.06 },
+        { "action": "spawnActor", "actor": "observer", "x": 195, "y": 250, "state": "default" },
+        { "action": "wait", "seconds": 0.06 },
+        { "action": "removeActor", "actor": "observer" },
+        { "action": "wait", "seconds": 3 },
+        { "action": "say", "actor": "ego", "text": "...No." },
+        { "action": "wait", "seconds": 2 },
+        { "action": "changeScene", "scene": "epilogue", "entry": "hidden" }
+      ]
+    },
+
+    "observer_reveal": {
+      "cutscene": true,
+      "steps": [
+        { "action": "setActorState", "actor": "observer", "state": "revealed", "persist": true },
+        { "action": "setFlag", "flag": "observer_revealed" },
+        { "action": "wait", "seconds": 0.5 },
+        { "action": "face", "actor": "ego", "facing": "south" },
+        { "action": "say", "actor": "ego", "text": "Hmm." },
+        { "action": "wait", "seconds": 0.5 },
+        { "action": "say", "actor": "ego", "text": "Whoever... or whatever that is." },
+        { "action": "say", "actor": "ego", "text": "It's been here a long time... observing." },
+        { "action": "wait", "seconds": 0.5 },
+        { "action": "say", "actor": "observer", "text": "..." }
+      ]
+    },
+
+    "nosy_box_entrance": {
+      "cutscene": true,
+      "steps": [
+        { "action": "face", "actor": "ego", "facing": "south" },
+        { "action": "wait", "seconds": 0.8 },
+        { "action": "spawnActor", "actor": "nosy_box", "x": 372, "y": 293, "state": "invisible" },
+        { "action": "say", "actor": "nosy_box", "text": "*clank*", "effect": "shake", "duration": 0.9 },
+        { "action": "wait", "seconds": 0.2 },
+        { "action": "say", "actor": "ego", "text": "Hello?" },
+        { "action": "wait", "seconds": 0.3 },
+        { "action": "walkTo", "actor": "ego", "x": 243, "y": 296 },
+        { "action": "face", "actor": "ego", "facing": "east" },
+        { "action": "wait", "seconds": 0.55 },
+        { "action": "teleport", "actor": "nosy_box", "x": 300, "y": 292 },
+        { "action": "say", "actor": "nosy_box", "text": "*clank*", "effect": "shake", "duration": 0.7 },
+        { "action": "wait", "seconds": 0.38 },
+        { "action": "teleport", "actor": "nosy_box", "x": 348, "y": 289 },
+        { "action": "say", "actor": "nosy_box", "text": "*clank*", "effect": "shake", "duration": 0.7 },
+        { "action": "wait", "seconds": 0.24 },
+        { "action": "teleport", "actor": "nosy_box", "x": 322, "y": 286 },
+        { "action": "say", "actor": "nosy_box", "text": "*clank*", "effect": "shake", "duration": 0.7 },
+        { "action": "wait", "seconds": 0.14 },
+        { "action": "teleport", "actor": "nosy_box", "x": 350, "y": 280 },
+        { "action": "say", "actor": "nosy_box", "text": "*clank*", "effect": "shake", "duration": 0.7 },
+        { "action": "cameraFollow", "actor": "nosy_box", "lerp": 2 },
+        { "action": "spawnActor", "actor": "nosy_box", "entry": "from_home", "state": "mobile" },
+        { "action": "wait", "seconds": 0.8 },
+        { "action": "say", "actor": "nosy_box", "text": "Oh." },
+        { "action": "wait", "seconds": 0.4 },
+        { "action": "say", "actor": "nosy_box", "text": "So this is how it looks." },
+        { "action": "wait", "seconds": 0.5 },
+        { "action": "say", "actor": "ego", "text": "Where did those legs come from?" },
+        { "action": "wait", "seconds": 0.3 },
+        { "action": "say", "actor": "nosy_box", "text": "These?" },
+        { "action": "wait", "seconds": 0.2 },
+        { "action": "say", "actor": "nosy_box", "text": "They've always been there." },
+        { "action": "wait", "seconds": 0.8 },
+        { "action": "say", "actor": "ego", "text": "...Right." },
+        { "action": "wait", "seconds": 0.8 },
+        { "action": "spawnObject", "object": "antenna", "x": 340, "y": 306, "persist": false, "state": "deploy_north" },
+        { "action": "waitForAnimation", "object": "antenna" },
+        { "action": "setObjectState", "object": "antenna", "state": "sweep_north" },
+        { "action": "wait", "seconds": 1.5 },
+        { "action": "say", "actor": "nosy_box", "text": "Interesting." },
+        { "action": "wait", "seconds": 1.5 },
+        { "action": "say", "actor": "nosy_box", "text": "Have you used that terminal yet?" },
+        { "action": "say", "actor": "ego", "text": "It wants a password." },
+        { "action": "wait", "seconds": 0.4 },
+        { "action": "say", "actor": "nosy_box", "text": "Oh." },
+        { "action": "wait", "seconds": 1 },
+        { "action": "say", "actor": "nosy_box", "text": "You did try 'admin', didn't you?" },
+        { "action": "wait", "seconds": 0.8 },
+        { "action": "say", "actor": "ego", "text": "...No." },
+        { "action": "wait", "seconds": 0.4 },
+        { "action": "say", "actor": "nosy_box", "text": "It's what I use." },
+        { "action": "wait", "seconds": 1.2 },
+        { "action": "say", "actor": "ego", "text": "...Seriously?" },
+        { "action": "wait", "seconds": 0.6 },
+        { "action": "say", "actor": "nosy_box", "text": "It's worked every time so far." },
+        { "action": "wait", "seconds": 1 },
+        { "action": "setObjectState", "object": "antenna", "state": "undeploy_north" },
+        { "action": "waitForAnimation", "object": "antenna" },
+        { "action": "removeObject", "object": "antenna" },
+        { "action": "wait", "seconds": 0.5 },
+        { "action": "say", "actor": "nosy_box", "text": "Anyway." },
+        { "action": "wait", "seconds": 0.3 },
+        { "action": "say", "actor": "nosy_box", "text": "These legs won't test themselves." },
+        { "action": "wait", "seconds": 0.7 },
+        { "action": "cameraFollow", "actor": "ego", "lerp": 2 },
+        { "action": "removeActor", "actor": "nosy_box", "exit": "to_home" },
+        { "action": "wait", "seconds": 0.8 },
+        { "action": "face", "actor": "ego", "facing": "south" },
+        { "action": "wait", "seconds": 1 },
+        { "action": "say", "actor": "ego", "text": "I have a feeling that's going to come back and haunt me." },
+        { "action": "setFlag", "flag": "terminal_password" }
+      ]
+    }
+  },
+
+  "walkableAreas": [
+    { "points": [
+        [269.15736040609136, 238.1522842639594],
+        [266.17108585858585, 260.2020202020202],
+        [281.9286616161616, 267.4747474747474],
+        [306.17108585858585, 267.47474747474746],
+        [321.9286616161616, 262.22222222222223],
+        [323.1407828282828, 252.1212121212121],
+        [316, 238.1522842639594],
+        [364.8730964467005, 238.15228426395942],
+        [464.55492424242425, 301.8181818181818],
+        [119.21009210908036, 300.6197747712108],
+        [161.58974140719332, 274.820395175195],
+        [218.9216980359452, 276.13390334673016],
+        [240.69035532994923, 238.1522842639594]
+      ],
+      "closed": true
+    },
+
+    { "points": [
+        [323.5939086294416, 238.1522842639594],
+        [323.18781725888323, 246.9035532994924],
+        [259.18781725888323, 246.497461928934],
+        [259.5939086294416, 238.1522842639594]
+      ],
+      "closed": true
+    }
+  ],
+
+  "occluders": [
+    { "points": [
+        [274.79765013054833, 251.90600522193213],
+        [280.6462140992167, 222.2454308093995],
+        [276.1239811772181, 217.2567317588116],
+        [278.1883982434718, 213.47258485639688],
+        [283.6192076429495, 212.2193211488251],
+        [298.6096605744125, 212.2193211488251],
+        [304.4338687633816, 213.07918606690563],
+        [307.7393716473575, 215.59789137189887],
+        [302.78720626631855, 222.2454308093995],
+        [308.635770234987, 252.32375979112274],
+        [292.34334203655357, 247.10208523146167]
+      ],
+      "closed": true
+    }
+  ]
+}

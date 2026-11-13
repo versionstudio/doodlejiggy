@@ -1,0 +1,214 @@
+{
+  "ego": {
+    "sprite": "ego.png",
+    "height": 180,
+    "speed": 110,
+    "speechColor": "white",
+    "idle": {
+      "frames": 1,
+      "rows": {
+        "east":  0,
+        "west":  0,
+        "north": 1,
+        "south": 2
+      }
+    },
+    "walk": {
+      "frames": 8,
+      "startFrame": 1,
+      "frameMs": 155,
+      "rows": {
+        "east":  0,
+        "west":  0,
+        "north": 1,
+        "south": 2
+      }
+    },
+    "talk": {
+      "frames": 8,
+      "startFrame": 9,
+      "frameMs": 145,
+      "jitterMs": 50,
+      "rows": {
+        "east":  0,
+        "west":  0,
+        "north": 1,
+        "south": 2
+      }
+    }
+  },
+
+  "nosy_box": {
+    "title": "Nosy Box",
+    "description": "A friendly little assistant that's always listening. Always.",
+    "sprite": "nosy_box.png",
+    "height": 40,
+    "speed": 60,
+    "speechColor": "yellow",
+    "initialState": "dormant",
+    "idle": {
+      "frames": 1,
+      "row": 0
+    },
+    "talk": {
+      "frames": 2,
+      "startFrame": 0,
+      "frameMs": 180,
+      "jitterMs": 55,
+      "row": 0
+    },
+    "states": {
+      "dormant": { 
+        "interaction": "look" 
+      },
+      "awake":   { 
+        "interaction": "talk", 
+        "dialogue": "nosy_box"
+      },
+      "upgraded":   {
+        "interaction": "talk",
+        "dialogue": "nosy_box_upgraded" 
+      },
+      "mobile": {
+        "sprite": "nosy_box_mobile.png",
+        "height": 62.5,
+        "idle": {
+          "frames": 1,
+          "rows": {
+            "east":  0,
+            "west":  0,
+            "north": 0,
+            "south": 1
+          }
+        },
+        "walk": {
+          "frames": 8,
+          "startFrame": 1,
+          "frameMs": 100,
+          "rows": {
+            "east":  0,
+            "west":  0,
+            "north": 0,
+            "south": 1
+          }
+        },
+        "talk": null
+      },
+      "invisible": {
+        "sprite": null
+      }
+    }
+  },
+
+  "dog": {
+    "title": "Dog",
+    "description": [
+      "A miniature dachshund with a glossy red coat and short little legs.",
+      "She keeps watching me like she's trying to tell me something.",
+      "She has the look of a dog who's already cleared her schedule for the rest of the day."
+    ],
+    "speed": 75,
+    "speechColor": "pink",
+    "initialState": "default",
+    "states": {
+      "default": {
+        "sprite": "dog.png",
+        "height": 40,
+        "idle": {
+          "frames": 1,
+          "rows": {
+            "east":  0,
+            "west":  0,
+            "north": 1,
+            "south": 2
+          }
+        },
+        "walk": {
+          "frames": 8,
+          "startFrame": 1,
+          "frameMs": 100,
+          "rows": {
+            "east":  0,
+            "west":  0,
+            "north": 1,
+            "south": 2
+          }
+        },
+        "talk": {
+          "frames": 4,
+          "startFrame": 9,
+          "frameMs": 165,
+          "jitterMs": 65,
+          "rows": {
+            "east":  0,
+            "west":  0,
+            "north": 1,
+            "south": 2
+          }
+        },
+        "animations": {
+          "sniff": { "frames": 8, "startFrame": 13, "frameMs": 150, "loop": false, "row": 0 }
+        }
+      },
+      "frenzy": {
+        "sprite": "dog_frenzy.png",
+        "height": 76,
+        "offsetY": 34,
+        "animations": {
+          "grab":  { "frames": 4, "frameMs": 100, "loop": false, "row": 0 },
+          "shred": { "frames": 24, "startFrame": 4, "frameMs": 100, "loop": false, "row": 0 }
+        }
+      }
+    }
+  },
+
+  "observer": {    
+    "sprite": "observer.png",
+    "height": 180,
+    "facing": "north",
+    "approachX": 12,
+    "approachY": 14,
+    "speed": 0,
+    "speechColor": "purple",
+    "interaction": "talk",
+    "initialState": "unknown",
+    "idle": {
+      "frames": 1,
+      "startFrame": 0,
+      "row": 0
+    },
+    "talk": {
+      "frames": 6,
+      "startFrame": 1,
+      "frameMs": 180,
+      "jitterMs": 100,
+      "row": 0
+    },
+    "states": {
+      "unknown": { 
+        "title": "Mysterious Figure",
+        "dialogue": "observer"
+      },
+      "revealed": {
+        "title": "Observer",
+        "dialogue": "observer_revealed"
+      }
+    }
+  },
+
+  "terminal": {
+    "sprite": "terminal.png",
+    "scaling": "fixed",
+    "speed": 0,
+    "idle": {
+      "frames": 2,
+      "row": 0,
+       "frameMs": 800
+    },
+    "speechColor": "lime",
+    "speechEffect": "crt",
+    "speechOffsetY": -60,
+    "interaction": "none",
+    "dialogue": "terminal"
+  }
+}

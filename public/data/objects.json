@@ -1,0 +1,283 @@
+{
+  "door": {
+    "title": "Door",
+    "speechOffsetY": -43,
+    "initialState": "closed",
+    "states": {
+      "closed": {
+        "interaction": "use"
+      },
+      "open": {
+        "sprite": "door_open.png",
+        "interaction": "none"
+      }
+    }
+  },
+
+  "radio": {
+    "interaction": "use",
+    "initialState": "off",
+    "title": "Radio",
+    "states": {
+      "on": {
+        "sprite": "radio_light.png",
+        "offsetY": -3
+      },
+      "off": {
+      
+      }
+    }
+  },
+
+  "mysterious_note": {
+    "sprite": "mysterious_note.png",
+    "icon": "mysterious_note.png",
+    "interaction": "pickup",
+    "initialState": "unidentified",
+    "states": {
+      "unidentified": {
+        "title": "Mysterious Note",
+        "pickupText": [
+          "It's the complete Doodlejiggy™ developer manual.",
+          "It's one page long."
+        ],
+        "transitions": { "pickup": "identified" }
+      },
+      "identified": {
+        "title": "Doodlejiggy™ Developer Manual",
+        "description": [
+          "It's a manual for something called Doodlejiggy™ — a Dynamic Object-Oriented Dialogue & Logic Engine powered by JIGGY™ technology.",
+          "JIGGY apparently stands for 'Just Interactive Geometry, Graphics & Yokes.' I still don't know what the Yoke is.",
+          "The manual consists of a single aggressively confident page.",
+          "According to the cover, this is the 'definitive reference edition.'",
+          "The manual proudly claims 'No additional documentation required.'",
+          "It's surprisingly short for something involving this many acronyms.",
+          "Most of the page is occupied by the word 'YOKES' in bold.",
+          "I still don't know what the Yoke is, but it seems extremely important."
+        ]
+      }
+    }
+  },
+
+  "odd_plush": {
+    "title": "Odd Plush Toy",
+    "description": [
+      "A purple plush toy.",
+      "It has a surprisingly unpleasant expression.",
+      "I get the feeling it has plans for the future."
+    ],
+    "facing": "west"
+  },
+  
+  "dog_bed": {
+    "title": "Dog Bed",
+    "description": [
+      "This seems to belong to the highest-ranking lifeform in the house.",
+      "Whoever sleeps here has things pretty well figured out.",
+      "The bed is currently unoccupied.",
+      "I should probably leave it exactly as it is."
+    ]
+  },
+
+  "piggy": {
+    "title": "Piggy",
+    "sprite": "piggy.png",
+    "plane": "flat",
+    "row": 0,
+    "interaction": "pickup",
+    "initialState": "clean",
+    "states": {
+      "clean": {
+        "description": [
+          "A fluffy pig toy for dogs. Most of its original dignity has been chewed away.",
+          "Somewhere along the way, it also became a modern 'Smart Toy' for pets.",
+          "There's definitely more technology inside this dog toy than feels necessary."
+        ]
+      },
+      "soaking": {
+        "description": "Needs more peanut butter.",
+        "plane": "surface"
+      },
+      "peanut_butter": {
+        "title": "Peanut-Smeared Piggy",
+        "description": [
+          "Piggy is now lightly smeared with peanut butter.",
+          "It smells considerably more interesting than it did a moment ago.",
+          "Peanut butter aside, it's still a modern 'Smart Toy' for pets.",
+          "The electronics inside have acquired some unexpected competition."
+        ],
+        "row": 1
+      }
+    }
+  },
+
+  "abandoned_snack": {
+    "facing": "west",
+    "initialState": "unidentified",
+    "states": {
+      "unidentified": {
+        "title": "Sticky Mess",
+        "description": "A coffee cup, a butter knife, and the remains of a peanut butter-related incident occupy the table.",
+        "transitions": { "look": "identified" }
+      },
+      "identified": {
+        "title": "Abandoned Snack",
+        "description": [
+          "Someone appears to have left in a hurry, or simply lowered their standards.",
+          "The peanut butter still smells surprisingly fresh."
+        ]
+      }
+    }
+  },
+
+  "fruit_bowl": {
+    "title": "Fruit Bowl",
+    "description": [
+      "A bowl of fruit.",
+      "It looked healthier from across the room.",
+      "Up close, it's plastic and vaguely disappointing."
+    ]
+  },
+
+  "artwork": {
+    "title": "Ghost Pirate Artwork",
+    "description": [
+      "Something about this artwork feels legendary.",
+      "Those two pirates don't seem particularly fond of each other.",
+      "I don't know why, but I could look at this all day."
+    ],
+    "sprite": "artwork.png",
+    "height": 41,
+    "facing": "west"
+  },
+
+  "computer": {
+    "title": "Computer",
+    "description": [
+      "A desktop computer surrounded by suspiciously well-organized cables.",
+      "Whoever set this up almost certainly owns a label maker.",
+      "Currently powered off. Probably for the best."
+    ],
+    "facing": "east"
+  },
+
+  "smartplay": {
+    "sprite": "smartplay.png",
+    "icon": "smartplay.png",
+    "plane": "flat",
+    "frames": 2,
+    "frameMs": 500,
+    "interaction": "pickup",
+    "initialState": "unidentified",
+    "states": {
+      "unidentified": {
+        "title": "Suspicious Electronic Device",
+        "description": "The casing is covered in microscopic text. I can just make out 'SmartPlay™ Companion Intelligence Module'.",
+        "pickupText": [
+          "Some kind of electronic module appears to have fallen out of Piggy.",
+          "It's still blinking."
+        ],
+        "transitions": { "look": "identified" }
+      },
+      "identified": {
+        "title": "SmartPlay™ Companion Intelligence Module",
+        "description": [
+          "A tiny processing module recovered from inside Piggy.",
+          "It contains more computing power than seems strictly necessary for making squeaking noises.",
+          "The manufacturer appears to have taken a highly experimental approach to safeguards.",
+          "Whatever this thing normally does, it doesn't appear to believe in idle time."
+        ]
+      }
+    }
+  },
+
+  "antenna": {
+    "sprite": "antenna.png",
+    "offsetY": -60,
+    "interaction": "none",
+    "initialState": "sweep_south",
+    "states": {
+      "sweep_north": { "row": 0, "frames": 4, "frameMs": 1000, "jitterMs": 450 },
+      "sweep_south": { "row": 1, "frames": 4, "frameMs": 1000, "jitterMs": 450 },
+      "deploy_north": { "row": 2, "frames": 9, "frameMs": 125, "loop": false },
+      "deploy_south": { "row": 3, "frames": 9, "frameMs": 125, "loop": false },
+      "undeploy_north": { "row": 2, "frames": 9, "frameMs": 125, "loop": false, "reverse": true }
+    }
+  },
+
+  "doorway_light": {
+    "sprite": "doorway_light.png",
+    "plane": "flat",
+    "interaction": "none"
+  },
+
+  "whiteboard": {
+    "title": "Whiteboard",
+    "description": [
+      "Every inch is covered in equations, diagrams, and frantic notes.",
+      "Some sections have been written over again and again.",
+      "Words like 'scene', 'engine', 'portal', and 'script' appear over and over.",
+      "Half of it reads like unfinished code. The other half reads like a survival journal."
+    ],
+    "facing": "west"
+  },
+
+  "photographs": {
+    "title": "Photographs",
+    "description": [
+      "One of these photographs looks just like me.",
+      "The rest also seem oddly familiar.",
+      "Someone has been keeping track of this place."
+    ],
+    "facing": "north"
+  },
+
+  "clues": {
+    "title": "Clues",
+    "description": [
+      "Pages of notes connected with lengths of red thread.",
+      "Some of the oldest notes have been revised over and over.",
+      "Whatever they were trying to find, they never finished."
+    ],
+    "facing": "east"
+  },
+
+  "terminal_console": {
+    "title": "Terminal",
+    "facing": "north",
+    "interaction": "use"
+  },
+
+  "markers": {
+    "title": "Whiteboard Markers",
+    "description": [
+      "A mug full of worn whiteboard markers.",
+      "None of them look like they've worked in a very long time.",
+      "They've clearly outlived their intended purpose."
+    ]
+  },
+
+  "dark_corner": {
+    "title": "Dark Corner",
+    "description": [
+      "Just a dark corner.",
+      "Still just a dark corner.",
+      "I'm beginning to suspect this is exactly what it looks like.",
+      "I don't think there's anything more to it."
+    ]
+  },
+
+  "confetti": {
+    "initialState": "rain",
+    "states": {
+      "rain": {
+        "sprite": "confetti.png",
+        "plane": "surface",
+        "frames": 25,
+        "frameMs": 100,
+        "loop": false,
+        "interaction": "none"
+      }
+    }
+  }
+}

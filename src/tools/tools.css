@@ -1,0 +1,453 @@
+/**
+ * tools.css
+ * Dev-only styling shared across the authoring tools (Debug Mode, Design Studio,
+ * MIDI Studio) and the UI framework that builds them (toolbar, picker, modal);
+ * never bundled into production.
+ *
+ * Classes are named by role, not feature, so any panel can reuse them
+ * (`.tools-actions`, `.tools-textarea`, `.tools-dropdown.wide`).
+ */
+
+/* ══ Toolbar ═══════════════════════════ */
+
+.tools-toolbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 36px;
+  display: flex;
+  align-items: stretch;
+  background: rgba(0, 0, 0, 0.85);
+  border-bottom: 1px solid rgba(85, 255, 85, 0.2);
+  font: 13px ScummSolid, monospace;
+  color: #55ff55;
+  user-select: none;
+  box-sizing: border-box;
+  z-index: 1000;
+}
+
+.tools-section {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 12px;
+  border-right: 1px solid rgba(85, 255, 85, 0.2);
+}
+
+.tools-section:last-child {
+  border-right: none;
+}
+
+.tools-spacer {
+  flex: 1;
+  min-width: 0; /* let the readout inside shrink and ellipsize instead of pushing the row */
+  display: flex;
+  align-items: center;
+  padding: 0 12px;
+}
+
+/* The running-scripts readout fills the spacer; keep it to one line and ellipsize
+   overflow so a long list never wraps or grows the bar (the leading count stays
+   visible at the left). */
+.tools-spacer .tools-dim {
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.tools-badge,
+.tools-label {
+  opacity: 0.35;
+}
+
+.tools-dim {
+  opacity: 0.4;
+}
+
+.tools-dim.clickable {
+  cursor: pointer;
+}
+
+.tools-dim.clickable:hover {
+  opacity: 0.7;
+}
+
+.tools-sep {
+  opacity: 0.3;
+}
+
+.tools-coords {
+  display: inline-block;
+  width: 14ch;
+  text-align: right;
+}
+
+/* ══ Buttons ═══════════════════════════ */
+
+.tools-btn {
+  background: none;
+  border: none;
+  color: #55ff55;
+  font: 13px ScummSolid, monospace;
+  padding: 0;
+  cursor: pointer;
+}
+
+.tools-btn:hover {
+  text-decoration: underline;
+}
+
+.tools-btn.toggle {
+  opacity: 0.35;
+}
+
+.tools-btn.toggle.active {
+  opacity: 1;
+}
+
+/* No scene loaded: only buttons marked .always-on (LOAD, info) stay usable. */
+.tools-toolbar.no-scene .tools-btn:not(.always-on) {
+  pointer-events: none;
+  opacity: 0.3;
+}
+
+.tools-btn.icon {
+  font-size: 16px;
+  opacity: 0.6;
+  transition: opacity 120ms;
+}
+
+.tools-btn.icon:hover {
+  text-decoration: none;
+  opacity: 1;
+}
+
+.tools-btn:focus {
+  outline: none;
+}
+
+/* ══ Dropdown ══════════════════════════ */
+
+.tools-dropdown {
+  position: fixed;
+  top: 39px;
+  left: 0;
+  min-width: 272px;
+  max-height: min(60vh, 480px);
+  overflow-y: auto;
+  display: none;
+  flex-direction: column;
+  padding: 10px 12px;
+  background-color: rgba(0, 0, 0, 0.92);
+  border: 1px solid rgba(85, 255, 85, 0.3);
+  border-top: none;
+  font: 13px ScummSolid, monospace;
+  color: #55ff55;
+  z-index: 1001;
+  box-sizing: border-box;
+}
+
+/* Green title is part of the editor's identity; only row labels go white. Rows
+   are contiguous (no panel gap), so structural children below carry their own
+   spacing — here the title-to-list gap. */
+.tools-dropdown-heading {
+  font-size: 14px;
+  margin-bottom: 14px;
+}
+
+.tools-dropdown-divider {
+  height: 1px;
+  background: rgba(85, 255, 85, 0.2);
+  margin: 10px 0 8px;
+}
+
+.tools-dropdown input {
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid rgba(85, 255, 85, 0.35);
+  color: #55ff55;
+  font: 13px ScummSolid, monospace;
+  outline: none;
+  width: 100%;
+  padding: 2px 0;
+  margin-bottom: 6px;
+}
+
+.tools-dropdown-warn {
+  font-size: 10px;
+  color: #f88;
+}
+
+/* ══ Dropdown rows ═════════════════════ */
+/* One row system used by every picker/list panel (debug flags, debug scripts,
+   design scene loader, design object picker, design portal picker).
+
+   `.clickable` is the bouncer: only present on rows that actually accept the
+   click. State modifiers (`.current`, `.disabled`) simply omit `.clickable`,
+   so the hover rule can't match them — no negation chains, no overrides.
+
+   Rows are contiguous: spacing is the row's own padding, never a gap between
+   rows, so every pixel of the list belongs to one row and the cursor always
+   hovers exactly one. Airiness lives inside the hit area, not in dead bands. */
+
+.tools-dropdown-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 0;
+  opacity: 0.65;
+  border-left: 3px solid transparent;
+}
+
+/* Rows carrying badges + metadata (Place Object) get more breathing room via
+   taller padding; the simpler lists stay compact. */
+.tools-dropdown.relaxed .tools-dropdown-row { padding: 9px 0; }
+
+.tools-dropdown-row.clickable       { cursor: pointer; }
+.tools-dropdown-row.clickable:hover { background: rgba(85, 255, 85, 0.08); }
+
+/* Action rows (flags, dialogues) aren't whole-row selectable, but still light on
+   hover so the row reads as a unit and its delete `x` reveals. */
+.tools-dropdown-row:has(.tools-dropdown-action):hover { background: rgba(85, 255, 85, 0.08); }
+
+/* Selected — the active mode in object/portal pickers. Default background
+   matches the hover tint, so hovering it is visually a no-op (which it is). */
+.tools-dropdown-row.selected {
+  opacity: 1;
+  border-left-color: #55ff55;
+  background: rgba(85, 255, 85, 0.08);
+}
+
+/* Current — already the live value (e.g. the currently-loaded scene).
+   Clicking would be a no-op, so the row is not given `.clickable`. */
+.tools-dropdown-row.current  { opacity: 0.5; }
+
+/* Disabled — click rejected (e.g. object already owned by another scene).
+   Still receives `.clickable` so the row lights up on hover; the strike-through
+   label carries the unavailability, so the cursor stays the plain default
+   rather than an aggressive prohibition glyph. */
+.tools-dropdown-row.disabled { cursor: default; }
+.tools-dropdown-row.disabled .tools-dropdown-label { text-decoration: line-through; }
+
+/* Primary information is white; metadata (badge, meta, action) stays green, so
+   the eye reads names first instead of a field of uniform green. */
+.tools-dropdown-label        { color: #fff; }
+.tools-dropdown-meta         { margin-left: auto; flex-shrink: 0; color: #55ff55; font-size: 11px; opacity: 0.35; }
+
+/* Delete `x` reads as an action, not text: always visible but subdued so it
+   stays discoverable, lifting when its row is hovered and at full strength on
+   direct hover. */
+.tools-dropdown-action                           { margin-left: auto; cursor: pointer; opacity: 0.45; }
+.tools-dropdown-row:hover .tools-dropdown-action { opacity: 0.7; }
+.tools-dropdown-action:hover                     { opacity: 1; }
+
+/* Compact outlined badge (object SPR/POLY, portal point/poly) — uppercased in
+   CSS so callers pass plain lowercase tags. */
+.tools-dropdown-type {
+  flex-shrink: 0;
+  font-size: 9px;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: #55ff55;
+  border: 1px solid rgba(85, 255, 85, 0.4);
+  border-radius: 2px;
+  padding: 1px 3px;
+}
+
+.tools-dropdown-search { margin-bottom: 4px; }
+
+.tools-dropdown-hint {
+  padding: 6px 0;
+  font-size: 11px;
+  color: rgba(85, 255, 85, 0.5);
+  border-top: 1px solid rgba(85, 255, 85, 0.2);
+  margin-top: 10px;
+}
+
+/* ══ Modal ═════════════════════════════ */
+
+/* The UA centers a modal <dialog> via position:fixed + inset:0 + margin:auto and
+   floats it in the top layer (no z-index). The global reset zeroes that margin,
+   so restore it here. Don't set position — the UA's fixed box is the ✕'s
+   containing block, and overriding it would break centering. */
+.tools-modal {
+  margin: auto;
+  background: #111;
+  border: 1px solid rgba(85, 255, 85, 0.3);
+  padding: 24px 32px;
+  max-width: 580px;
+  width: 90%;
+  max-height: 80vh;
+  overflow-y: auto;
+  font: 13px ScummSolid, monospace;
+  color: #55ff55;
+  line-height: 1.8;
+}
+
+.tools-modal::backdrop {
+  background: rgba(0, 0, 0, 0.75);
+}
+
+.tools-modal h2 {
+  font: 13px ScummSolid, monospace;
+  margin: 0 0 16px;
+  color: #55ffff;
+  letter-spacing: 1px;
+}
+
+.tools-modal h3 {
+  font: 13px ScummSolid, monospace;
+  margin: 16px 0 6px;
+  opacity: 0.6;
+}
+
+.tools-modal p,
+.tools-modal li {
+  margin: 3px 0;
+}
+
+.tools-modal ul {
+  padding-left: 16px;
+}
+
+.tools-modal kbd {
+  background: rgba(85, 255, 85, 0.1);
+  border: 1px solid rgba(85, 255, 85, 0.3);
+  padding: 1px 5px;
+  font: 13px ScummSolid, monospace;
+}
+
+.tools-modal-close {
+  position: absolute;
+  top: 12px;
+  right: 14px;
+  background: none;
+  border: none;
+  color: #55ff55;
+  font: 13px ScummSolid, monospace;
+  cursor: pointer;
+  line-height: 1;
+  padding: 0;
+}
+
+.tools-modal-close:hover {
+  text-decoration: underline;
+}
+
+/* Right-aligned button row. Generic — used by any tooling panel/modal. Inside a
+   modal it needs a top gap; dropdown children already gap via the panel. */
+.tools-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+}
+
+.tools-modal .tools-actions {
+  margin-top: 20px;
+}
+
+/* ══ Form controls ═════════════════════ */
+/* Generic, role-named pieces reusable by any debug or design panel — the run
+   panel is their first consumer. */
+
+/* A dropdown sized for content wider than a list — e.g. an editor. */
+.tools-dropdown.wide {
+  width: 380px;
+}
+
+.tools-textarea {
+  width: 100%;
+  min-height: 160px;
+  resize: vertical;
+  background: #0a0a0a;
+  border: 1px solid rgba(85, 255, 85, 0.3);
+  color: #55ff55;
+  font: 13px ScummSolid, monospace;
+  line-height: 1.5;
+  padding: 8px;
+  outline: none;
+  box-sizing: border-box;
+}
+
+/* Form error/message line. Amber to match the engine's warning vocabulary;
+   min-height holds layout steady so neighbours don't jump as it appears/clears. */
+.tools-error {
+  color: #ff9933;
+  white-space: pre-wrap;
+  min-height: 1.8em;
+  margin-top: 6px;
+}
+
+/* Run panel: the reserved error line otherwise leaves STOP/START floating in the
+   gap below the editor. Trim that reservation (a single-line error still fits,
+   so layout stays steady) to pull the actions up against the textarea, and lift
+   the recent heading so actions + recent + history read as one bottom group. */
+.tools-dropdown.wide .tools-error { margin-top: 0; min-height: 1.2em; }
+.tools-dropdown.wide .tools-actions + .tools-dropdown-heading { margin-top: -4px; }
+
+/* Height-capped scroll region nested inside a panel (e.g. ~4 rows of history),
+   so the panel's primary content stays dominant. */
+.tools-scroll {
+  max-height: 90px;
+  overflow-y: auto;
+  border-top: 1px solid rgba(85, 255, 85, 0.2);
+}
+
+/* Always-visible scrollbar for the scrolling tool panels — macOS overlay
+   scrollbars otherwise auto-hide, leaving no resting cue that the list scrolls.
+   WebKit pseudo-elements force a persistent (non-overlay) bar; the standard
+   scrollbar-width/color path is scoped to non-WebKit (Firefox) below, because
+   setting it in Chrome makes Chrome ignore ::-webkit-scrollbar and fall back
+   to an auto-hiding overlay bar. */
+@supports not selector(::-webkit-scrollbar) {
+  .tools-dropdown,
+  .tools-scroll,
+  .tools-modal {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(85, 255, 85, 0.45) transparent;
+  }
+}
+.tools-dropdown::-webkit-scrollbar,
+.tools-scroll::-webkit-scrollbar,
+.tools-modal::-webkit-scrollbar          { width: 8px; }
+.tools-dropdown::-webkit-scrollbar-track,
+.tools-scroll::-webkit-scrollbar-track,
+.tools-modal::-webkit-scrollbar-track    { background: transparent; }
+.tools-dropdown::-webkit-scrollbar-thumb,
+.tools-scroll::-webkit-scrollbar-thumb,
+.tools-modal::-webkit-scrollbar-thumb {
+  background: rgba(85, 255, 85, 0.45);
+  border-radius: 4px;
+}
+.tools-dropdown::-webkit-scrollbar-thumb:hover,
+.tools-scroll::-webkit-scrollbar-thumb:hover,
+.tools-modal::-webkit-scrollbar-thumb:hover { background: rgba(85, 255, 85, 0.7); }
+
+/* ══ Tool canvas ═══════════════════════ */
+
+/* Full-screen canvas a tool draws into, beneath the fixed toolbar. */
+.tools-canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 100;
+  pointer-events: all;
+}
+
+/* ══ Readout ═══════════════════════════ */
+
+/* A labelled key/value status block. Block-level rows; the host tool centers
+   or positions the container. `b` is the key column. */
+.tools-readout {
+  font: 14px ScummSolid, monospace;
+  color: #55ff55;
+  line-height: 1.9;
+  cursor: default;
+}
+
+.tools-readout b { display: inline-block; width: 72px; color: #888; font-weight: normal; }

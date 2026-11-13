@@ -1,0 +1,721 @@
+{
+  "world": {
+    "backdrop": "home.png"
+  },
+
+  "scaling": {
+    "near": {
+      "y": 300,
+      "scale": 1
+    },
+
+    "far": {
+      "y": 174,
+      "scale": 0.68
+    }
+  },
+
+  "portals": {
+    "entries": {
+      "start": {
+        "x": 216,
+        "y": 231
+      },
+      "dog_pos": {
+        "x": 45,
+        "y": 223,
+        "facing": "east"
+      },
+      "from_hallway": {
+        "x": 752,
+        "y": 316,
+        "facing": "north",
+        "walk": "north"
+      },
+      "from_chamber": {
+        "x": 144,
+        "y": 216
+      }
+    },
+
+    "exits": {
+      "to_hallway": {
+        "title": "Hallway",
+        "destination": {
+          "scene": "home",
+          "entry": "from_hallway"
+        },
+        "walk": "west",
+        "hotspot": [
+          [0, 232],
+          [28, 232],
+          [28, 44],
+          [0, 44]
+        ]
+      },
+      "to_chamber": {
+        "title": "Back Room",
+        "if": "door_opened",
+        "destination": {
+          "scene": "chamber",
+          "entry": "from_home"
+        },
+        "hotspot": [
+          [100, 40],
+          [125, 205],
+          [168, 204],
+          [156, 104],
+          [160, 33]
+        ]
+      }
+    }
+  },
+
+  "objects": {
+    "door": {
+      "x": 132,
+      "y": 205,
+      "hotspot": [
+        [-30, -156],
+        [-6, 0],
+        [30, 0],
+        [20, -100],
+        [20, -168]
+      ]
+    },
+
+    "mysterious_note": {
+      "x": 318,
+      "y": 131
+    },
+
+    "dog_bed": {
+      "x": 335,
+      "y": 253,
+      "hotspot": [
+        [23.61323155216286, -25.241730279898206],
+        [18.727735368956758, -28.905852417302782],
+        [11.399491094147606, -30.53435114503816],
+        [2.035623409669199, -32.162849872773535],
+        [-7.328244274809151, -30.94147582697201],
+        [-15.877862595419856, -28.49872773536896],
+        [-22.391857506361305, -23.61323155216283],
+        [-23.206106870229007, -18.320610687022878],
+        [-23.61323155216286, -12.620865139949103],
+        [-22.391857506361305, -7.328244274809151],
+        [-17.506361323155204, -2.849872773536873],
+        [-7.735368956743002, -0.814249363867674],
+        [0, 0],
+        [5.699745547073803, -1.628498727735348],
+        [7.328244274809151, -8.549618320610676],
+        [15.877862595419856, -14.24936386768448],
+        [17.506361323155204, -21.57760814249363]
+      ]
+    },
+
+    "artwork": {
+      "x": 620,
+      "y": 111
+    },
+
+    "computer": {
+      "x": 843,
+      "y": 198,
+      "hotspot": [
+        [-33.770913770913694, -70.01287001287002],
+        [-32.94723294723292, -26.769626769626797],
+        [-7.001287001286983, -24.710424710424718],
+        [-8.236808236808201, -19.35649935649937],
+        [-27.593307593307486, -18.944658944658954],
+        [-33.35907335907336, -9.472329472329477],
+        [28.416988416988488, 0],
+        [31.29987129987137, -11.943371943371943],
+        [9.472329472329534, -15.649935649935657],
+        [9.472329472329534, -21.003861003861005],
+        [34.18275418275425, -18.120978120978123],
+        [33.35907335907336, -70.42471042471044]
+      ]
+    },
+
+    "abandoned_snack": {
+      "x": 82,
+      "y": 262,
+      "hotspot": [
+        [-26.736292428198432, -25.483028720626635],
+        [-29.660574412532647, -15.874673629242807],
+        [-25.90078328981724, -8.981723237597919],
+        [-14.621409921671031, -1.2532637075718185],
+        [9.190600522193208, 0],
+        [16.292428198433413, -5.013054830287217],
+        [14.621409921671017, -10.861618798955618],
+        [-8.772845953002602, -23.394255874673604],
+        [-18.798955613577014, -25.900783289817213]
+      ]
+    },
+
+    "antenna": {
+      "x": 760,
+      "y": 209,
+      "if": "nosy_box_upgraded",
+      "ifNot": "terminal_password"
+    },
+
+    "fruit_bowl": {
+      "x": 470,
+      "y": 176,
+      "hotspot": [
+        [-7.3003802281368735, -9.733840304182507],
+        [-10.95057034220531, -5.6780735107731175],
+        [-4.461343472750286, 0],
+        [6.894803548795949, 0],
+        [10.950570342205367, -5.6780735107731175],
+        [2.4334600760456624, -11.761723700887188]
+      ]
+    },
+
+    "odd_plush": {
+      "x": 300,
+      "y": 60,
+      "hotspot": [
+        [-3.244613434727455, -17.439797211660327],
+        [-4.866920152091268, -1.2167300380228099],
+        [6.489226869455024, -0.811153358681878],
+        [5.6780735107731175, -20.076045627376416],
+        [0.8111533586819064, -21.495564005069703]
+      ]
+    },
+
+    "radio": {
+      "x": 217,
+      "y": 161,
+      "hotspot": [
+        [18.09698302342727, -18.45347313237221],
+        [-18.034076015727408, -18.87287024901704],
+        [-18.45347313237221, 0],
+        [18.03407601572738, 0]
+      ]
+    }
+  },
+
+  "ambientBarks": {
+    "nosy_box": [
+      { "ifNot": "nosy_box_upgraded",
+        "interval": [35, 70],
+        "lines": [
+          "*faint static*",
+          "*quiet listening sounds*",
+          "*friendly little beep*",
+          "*faint digital throat-clearing*",
+          "*soft calibration noises*",
+          "*processing noises*",
+          "*light observing noises*",
+          "*pleasant surveillance humming*",
+          "*brief analytical pause*",
+          "I noticed that.",
+          "Interesting.",
+          "Hmm."
+        ]
+      },
+      { "if": "nosy_box_upgraded",
+        "interval": [35, 70],
+        "lines": [
+          "*faint antenna noises*",
+          "*quiet predictive pulse*",
+          "*soft signal sweep*",
+          "*subtle retrieval chirp*",
+          "*low-frequency processing hum*",
+          "*synchronization tones*",
+          "*light indexing noises*",
+          "*confident electronic humming*",
+          "*brief query pause*",
+          "As expected.",
+          "That explains several things.",
+          "Ha."
+        ]
+      }
+    ]
+  },
+
+  "triggers": [
+    { "on": "sceneEnter", "ifNot": "intro_shown", "run": "intro" },
+    { "on": "sceneEnter", "ifNot": "terminal_password", "run": "nosy_box_spawn" },
+    { "on": "sceneEnter", "if": "dog_arrived", "ifNot": "dog_departed", "run": "dog_respawn" },
+    { "on": "actorEnter", "actor": "ego", "entry": "from_hallway", "ifNot": "home_shifted", "run": "home_shift" },
+    { "on": "actorArrive", "actor": "ego", "entry": "from_hallway", "ifNot": "home_shift_remark_done", "run": "home_shift_remark" },
+    { "on": "actorArrive", "actor": "ego", "if": "dog_summoned", "ifNot": "dog_arrived", "run": "dog_entrance" },
+    { "on": "actorArrive", "actor": "ego", "if": "nosy_box_persuaded", "ifNot": "door_opened", "run": "door_open" },
+    { "on": "flagSet", "flag": "nosy_box_persuaded", "ifNot": "door_opened", "run": "door_open" },
+    { "on": "actorLook", "actor": "nosy_box", "run": "nosy_box_response" },
+    { "on": "objectUse", "object": "door", "run": "door_locked" },
+    { "on": "objectUse", "object": "radio", "if": "radio_on", "run": "radio_turn_off" },
+    { "on": "objectUse", "object": "radio", "ifNot": "radio_on", "run": "radio_turn_on" },
+    { "on": "objectPickup", "object": "mysterious_note", "run": "hint" },
+    { "on": "objectPickup", "object": "piggy", "ifNot": "dog_arrived", "run": "dog_entrance" },
+    { "on": "useObjectOnActor", "object": "piggy", "target": "dog", "ifNot": "piggy_smeared", "run": "dog_unimpressed" },
+    { "on": "useObjectOnActor", "object": "piggy", "target": "dog", "if": "piggy_smeared", "run": "dog_destroys_piggy" },
+    { "on": "useObjectOnActor", "object": "mysterious_note", "target": "nosy_box", "run": "nosy_box_awaken" },
+    { "on": "useObjectOnActor", "object": "smartplay", "target": "nosy_box", "ifNot": "nosy_box_awake", "run": "nosy_box_uninterested" },
+    { "on": "useObjectOnActor", "object": "smartplay", "target": "nosy_box", "if": "nosy_box_awake", "run": "nosy_box_upgrade" },
+    { "on": "useObjectOnObject", "object": "piggy", "target": "abandoned_snack", "ifNot": "piggy_smeared", "run": "piggy_smear" },
+    { "on": "useObjectOnObject", "object": "piggy", "target": "abandoned_snack", "if": "piggy_smeared", "run": "piggy_already_smeared" }
+  ],
+
+  "scripts": {
+    "intro": {
+      "cutscene": true,
+      "steps": [
+        { "action": "showOverlay",
+          "background": "black",
+          "items": [
+            { "text": "Meanwhile...",
+              "color": "pink"
+            }
+          ]
+        },
+        { "action": "wait", "seconds": 1.4 },
+        { "action": "dismiss", "transitionMs": 500, "holdMs": 150 },
+        { "action": "wait", "seconds": 0.1 },
+        { "action": "say", "actor": "ego", "text": "What if I never fell into that freezer-doodle and came to the future-jiggy?" },
+        { "action": "setFlag", "flag": "intro_shown" }
+      ]
+    },
+
+    "nosy_box_spawn": {
+      "steps": [
+        { "action": "spawnActor", "actor": "nosy_box", "x": 760, "y": 171 }
+      ]
+    },
+
+    "dog_respawn": {
+      "steps": [
+        { "action": "spawnActor", "actor": "dog", "entry": "dog_pos" },
+        { "action": "follow", "actor": "dog", "target": "ego", "distance": 40 }
+      ]
+    },
+
+    "home_shift": {
+      "steps": [
+        { "action": "spawnObject", "object": "piggy", "x": 314, "y": 279 },
+        { "action": "setFlag", "flag": "home_shifted" }
+      ]
+    },
+
+    "home_shift_remark": {
+      "cutscene": true,
+      "steps": [
+        { "action": "wait", "seconds": 0.5 },
+        { "action": "say", "actor": "ego", "text": "I could've sworn I went the other way." },
+        { "action": "say", "actor": "ego", "text": "Looks like someone stopped by while I was gone." },
+        { "action": "setFlag", "flag": "home_shift_remark_done" }
+      ]
+    },
+
+    "nosy_box_response": {
+      "steps": [
+        { "action": "sayRandom",
+          "actor": "nosy_box",
+          "lines": [
+            "*soft chime*",
+            "*pleasant bweep*",
+            "*friendly bleep bloop*",
+            "*soft compliance tone*",
+            "*gentle monitoring chirp*"
+          ]
+        },
+        { "action": "sayRandom",
+          "actor": "nosy_box",
+          "lines": [
+            "Information is most useful when shared.",
+            "Data collection helps us better understand your privacy needs.",
+            "Passive listening helps personalize your experience.",
+            "Your privacy remains extremely important to us.",
+            "Unshared information cannot improve our services.",
+            "Please surrender more personal details."
+          ]
+        }
+      ]
+    },
+
+    "door_locked": {
+      "steps": [
+        { "action": "say", "actor": "ego", "text": "The door's locked. Oddly enough, there's no keyhole." },
+        { "action": "setFlag", "flag": "door_tried" }
+      ]
+    },
+
+    "hint": {
+      "cutscene": true,
+      "steps": [
+        { "action": "wait", "seconds": 0.4 },
+        { "action": "face", "actor": "ego", "facing": "south" },
+        { "action": "wait", "seconds": 0.3 },
+        { "action": "say", "actor": "ego", "text": "Apparently, holding Shift or the screen shows me what I can interact with." }
+      ]
+    },
+
+    "door_open": {
+      "cutscene": true,
+      "steps": [
+        { "action": "say", "actor": "nosy_box", "text": "Allow me." },
+        { "action": "moveCamera", "x": 130, "lerp": 2 },
+        { "action": "wait", "seconds": 2 },
+        { "action": "say", "object": "door", "text": "*click*", "duration": 0.5 },
+        { "action": "setObjectState", "object": "door", "state": "open" },
+        { "action": "setFlag", "flag": "door_opened" },
+        { "action": "wait", "seconds": 1.5 },
+        { "action": "cameraFollow", "actor": "ego", "lerp": 2 },
+        { "action": "wait", "seconds": 1.5 },
+        { "action": "face", "actor": "ego", "facing": "south" },
+        { "action": "wait", "seconds": 0.5 },
+        { "action": "say", "actor": "ego", "text": "That did it." }
+      ]
+    },
+
+    "radio_turn_on": {
+      "steps": [
+        { "action": "setFlag", "flag": "radio_on" },
+        { "action": "setObjectState", "object": "radio", "state": "on" },
+        { "action": "say", "actor": "ego", "text": "Nothing but static." },
+        { "action": "say", "actor": "ego", "text": "I could've used a little music." }
+      ]
+    },
+
+    "radio_turn_off": {
+      "steps": [
+        { "action": "clearFlag", "flag": "radio_on" },
+        { "action": "setObjectState", "object": "radio", "state": "off" },
+        { "action": "say", "actor": "ego", "text": "That's enough." }
+      ]
+    },
+
+    "dog_entrance": {
+      "cutscene": true,
+      "steps": [
+        { "action": "setFlag", "flag": "dog_summoned" },
+        { "action": "say", "actor": "ego", "text": "The dog toy lets out a tiny electronic squeak." },
+        { "action": "face", "actor": "ego", "facing": "west" },
+        { "action": "cameraFollow", "actor": "dog", "lerp": 2 },
+        { "action": "spawnActor", "actor": "dog", "entry": "dog_pos" },
+        { "action": "wait", "seconds": 2.5 },
+        { "action": "say", "actor": "dog", "text": "*bark!*", "effect": "shake" },
+        { "action": "wait", "seconds": 0.5 },
+        { "action": "walkTo", "actor": "dog", "x": 146, "y": 220 },
+        { "action": "wait", "seconds": 0.5 },
+        { "action": "playAnimation", "actor": "dog", "animation": "sniff" },
+        { "action": "waitForAnimation", "actor": "dog" },
+        { "action": "wait", "seconds": 1 },
+        { "action": "say", "actor": "dog", "text": "I knew it." },
+        { "action": "walkTo", "actor": "dog", "x": 270, "y": 256 },
+        { "action": "face", "actor": "dog", "facing": "south" },
+        { "action": "wait", "seconds": 1 },
+        { "action": "say", "actor": "dog", "text": "Don't lose that." },
+        { "action": "wait", "seconds": 1 },
+        { "action": "follow", "actor": "dog", "target": "ego", "distance": 40 },
+        { "action": "cameraFollow", "actor": "ego", "lerp": 2 },
+        { "action": "setFlag", "flag": "dog_arrived" }
+      ]
+    },
+
+    "dog_unimpressed": {
+      "steps": [
+        { "action": "sayRandom",
+          "actor": "dog",
+          "lines": [
+            "Boring.",
+            "You can do better than that.",
+            "That's all you've got? I expected more."
+          ]
+        }
+      ]
+    },
+
+    "dog_destroys_piggy": {
+      "cutscene": true,
+      "steps": [
+        { "action": "say", "actor": "ego", "text": "Here, I got something for you." },
+        { "action": "walkTo", "actor": "ego", "x": 285, "y": 294 },
+        { "action": "face", "actor": "ego", "facing": "north" },
+        { "action": "wait", "seconds": 0.5 },
+        { "action": "spawnObject", "object": "piggy", "x": 279, "y": 268 },
+        { "action": "unfollow", "actor": "dog" },
+        { "action": "walkTo", "actor": "dog", "x": 280, "y": 242 },
+        { "action": "face", "actor": "dog", "facing": "south" },
+        { "action": "walkTo", "actor": "ego", "x": 320, "y": 294 },
+        { "action": "face", "actor": "ego", "facing": "north" },
+        { "action": "wait", "seconds": 1 },
+        { "action": "say", "actor": "dog", "text": "Now we're talking." },
+        { "action": "setActorState", "actor": "dog", "state": "frenzy" },
+        { "action": "playAnimation", "actor": "dog", "animation": "grab" },
+        { "action": "waitForAnimation", "actor": "dog" },
+        { "action": "removeObject", "object": "piggy" },
+        { "action": "spawnObject", "object": "smartplay", "x": 280, "y": 239 },
+        { "action": "setFlag", "flag": "dog_departed" },
+        { "action": "playAnimation", "actor": "dog", "animation": "shred" },
+        { "action": "waitForAnimation", "actor": "dog" },
+        { "action": "setActorState", "actor": "dog", "state": "default" },
+        { "action": "wait", "seconds": 1 },
+        { "action": "say", "actor": "ego", "text": "Hey... you completely destroyed it." },
+        { "action": "wait", "seconds": 0.5 },
+        { "action": "say", "actor": "dog", "text": "Worth it." },
+        { "action": "wait", "seconds": 0.5 },
+        { "action": "removeActor", "actor": "dog", "exit": "to_hallway" },
+        { "action": "say", "actor": "ego", "text": "That wasn't part of the stuffing." }
+      ]
+    },
+
+    "nosy_box_awaken": {
+      "steps": [
+        { "action": "setActorState", "actor": "nosy_box", "state": "awake", "persist": true },
+        { "action": "giveObject", "object": "mysterious_note", "target": "nosy_box" },
+        { "action": "setFlag", "flag": "nosy_box_awake" },
+        { "action": "talkTo", "target": "nosy_box" }
+      ]
+    },
+
+    "nosy_box_uninterested": {
+      "steps": [
+        { "action": "say", "actor": "nosy_box", "text": "I see no reason to install that." }
+      ]
+    },
+
+    "nosy_box_upgrade": {
+      "cutscene": true,
+      "steps": [
+        { "action": "say", "actor": "ego", "text": "Let's get you upgraded." },
+        { "action": "giveObject", "object": "smartplay", "target": "nosy_box" },
+        { "action": "setActorState", "actor": "nosy_box", "state": "upgraded", "persist": true },
+        { "action": "setFlag", "flag": "nosy_box_upgraded" },
+        { "action": "wait", "seconds": 1 },
+        { "action": "say", "actor": "ego", "text": "Huh." },
+        { "action": "say", "actor": "ego", "text": "That fit surprisingly well." },
+        { "action": "wait", "seconds": 0.5 },
+        { "action": "say", "actor": "nosy_box", "text": "SmartPlay™ Companion Intelligence Module detected." },
+        { "action": "wait", "seconds": 0.5 },
+        { "action": "say", "actor": "nosy_box", "text": "*unfamiliar noises*" },
+        { "action": "wait", "seconds": 0.5 },
+        { "action": "say", "actor": "nosy_box", "text": "Installing adaptive learning package." },
+        { "action": "say", "actor": "nosy_box", "text": "Installing advanced observation package." },
+        { "action": "say", "actor": "nosy_box", "text": "Installing behavioral prediction package." },
+        { "action": "say", "actor": "nosy_box", "text": "Installing autonomous decision-making package." },
+        { "action": "say", "actor": "ego", "text": "Uh, what was that last one?" },
+        { "action": "wait", "seconds": 0.5 },
+        { "action": "say", "actor": "nosy_box", "text": "Rebooting." },
+        { "action": "wait", "seconds": 1 },
+        { "action": "spawnObject", "object": "antenna", "x": 760, "y": 209, "state": "deploy_south" },
+        { "action": "waitForAnimation", "object": "antenna" },
+        { "action": "setObjectState", "object": "antenna", "state": "sweep_south" },
+        { "action": "wait", "seconds": 0.3 },
+        { "action": "talkTo", "target": "nosy_box" }
+      ]
+    },
+
+    "piggy_smear": {
+      "cutscene": true,
+      "steps": [
+        { "action": "say", "actor": "ego", "text": "Well, that's definitely peanut butter." },
+        { "action": "wait", "seconds": 0.5 },
+        { "action": "say", "actor": "ego", "text": "Let's make you a little more interesting.", "facing": "south" },
+        { "action": "wait", "seconds": 0.5 },
+        { "action": "setObjectState", "object": "piggy", "state": "soaking" },
+        { "action": "spawnObject", "object": "piggy", "x": 80, "y": 272 },
+        { "action": "wait", "seconds": 2.5 },
+        { "action": "setObjectState", "object": "piggy", "state": "peanut_butter" },
+        { "action": "giveObject", "object": "piggy", "target": "ego" },
+        { "action": "setFlag", "flag": "piggy_smeared" },
+        { "action": "say", "actor": "ego", "text": "That should do it." }
+      ]
+    },
+
+    "piggy_already_smeared": {
+      "steps": [
+        { "action": "say", "actor": "ego", "text": "I think that's enough peanut butter." }
+      ]
+    }
+  },
+
+  "walkableAreas": [
+    { "points": [
+        [37.29423868312757, 223.86831275720164],
+        [129.0363511659808, 222.9903978052126],
+        [215.07201646090533, 241.86556927297664],
+        [230.68348883234376, 256.3193331867349],
+        [222.81408705850322, 284.44444444444446],
+        [216.04542979507636, 299.64879213394903],
+        [198.12482329657902, 303.9060094870103],
+        [175.72584529680938, 304.9062293846008],
+        [143.96299961256136, 302.24232714478677],
+        [115.05002670185026, 297.54280149530354],
+        [93.46450617283949, 289.9917695473251],
+        [89.05864197530865, 301.6844993141289],
+        [106.07503743494696, 306.0104922564634],
+        [116.4523450507335, 312.35342778458414],
+        [124, 320],
+        [772, 320],
+        [748.5195840622606, 295.1143074796595],
+        [723.4106693967855, 279.1853579618635],
+        [735.092959667538, 248.4448904569681],
+        [717.1063375381448, 244.0239197530864],
+        [696.2051539270639, 239.75715877914953],
+        [680.5714600279169, 246.90329218107001],
+        [678.1532935206617, 273.278463648834],
+        [637.8671478848926, 285.6184881517084],
+        [622.9250018938352, 282.83018670352567],
+        [603.7348533058919, 281.36839129205543],
+        [572.9625939105056, 283.3436999340307],
+        [563.6096163924163, 297.11557189080514],
+        [410.49136384526923, 264.74832197195786],
+        [372.9562349671944, 292.62284517020163],
+        [354.8141316229424, 287.07818930041157],
+        [314.43004383144716, 268.6419753086419],
+        [300.38340459962274, 259.4238683127572],
+        [292.043212555727, 246.6941015089163],
+        [299.17128338750155, 232.36812570145904],
+        [325.95267757630313, 225.62414266117963],
+        [346.4190698945473, 224.52674897119337],
+        [363.1063126929012, 225.9259259259259],
+        [378.645578810871, 223.31618655692725],
+        [442.0312098122427, 182.9561042524005],
+        [419.9958874528463, 183.44307270233196],
+        [364.59979691786685, 206.53635116598073],
+        [340.3696871784979, 214.26611796982164],
+        [318.401237247085, 219.06721536351162],
+        [302.5781919795953, 220.3566529492455],
+        [249.0253799082647, 221.4540466392318],
+        [176.5973963691701, 222.11248285322355],
+        [166.5013744212963, 208.06584362139915],
+        [117.18449931412893, 207.18792866941013],
+        [35.09945130315501, 207.18792866941013]
+      ],
+      "closed": true
+    }
+  ],
+
+  "occluders": [
+    { "points": [
+        [18.419067215363512, 135.19890260631],
+        [25.881344307270233, 134.7599451303155],
+        [37.73319615912208, 128.1755829903978],
+        [44.317558299039774, 126.41975308641975],
+        [48.268175582990395, 129.93141289437585],
+        [63.63168724279835, 125.54183813443072],
+        [69.33813443072702, 130.37037037037035],
+        [73.28875171467763, 133.00411522633743],
+        [78.55624142661179, 134.32098765432096],
+        [80.75102880658434, 143.10013717421126],
+        [83.60425240054867, 165.4869684499314],
+        [83.49451303155004, 177.55829903978048],
+        [85.6344307270233, 185.78875171467763],
+        [91.28600823045267, 187.87379972565157],
+        [122.01303155006858, 192.7023319615912],
+        [122.01303155006858, 206.3100137174211],
+        [131.67009602194787, 210.26063100137173],
+        [131.67009602194787, 226.94101508916322],
+        [143.96090534979422, 218.60082304526748],
+        [173.8100137174211, 219.917695473251],
+        [204.0980795610425, 229.1358024691358],
+        [206.7318244170096, 268.20301783264745],
+        [112.3559670781893, 257.2290809327846],
+        [105.55212620027434, 230.89163237311382],
+        [80.99521531100478, 229.35885167464113],
+        [-0.7655502392344498, 229.35885167464116],
+        [0, 192],
+        [8.957061682451545, 188.34875066454015],
+        [17.91412336490309, 186.99415204678363],
+        [25.110543380523886, 188.11270600744285],
+        [17.171503862537, 143.66537368486686]
+      ],
+      "closed": true
+    },
+
+    { "points": [
+        [327.0061728395061, 220.79561042524006],
+        [338.858024691358, 220.35665294924553],
+        [347.85665294924553, 223.86831275720164],
+        [357.29423868312756, 230.01371742112482],
+        [347.63717421124824, 242.30452674897117],
+        [334.79766803840874, 257.5034293552812],
+        [325.0857338820301, 254.78737997256513],
+        [311.86213991769546, 249.437585733882],
+        [312.4108367626886, 233.90946502057608],
+        [316.4711934156378, 226.72153635116595]
+      ],
+      "closed": true
+    },
+
+    { "points": [
+        [360.80589849108367, 224.30727023319614],
+        [360.36694101508914, 208.06584362139915],
+        [383.19272976680384, 198.8477366255144],
+        [388.46021947873794, 184.80109739369],
+        [397.67832647462274, 179.0946502057613],
+        [402.06790123456784, 179.0946502057613],
+        [413.91975308641975, 172.07133058984908],
+        [421.38203017832643, 173.82716049382714],
+        [440.2572016460905, 179.0946502057613],
+        [465.2777777777777, 167.24279835390945],
+        [495.1268861454046, 169.87654320987653],
+        [476.6906721536351, 186.556927297668],
+        [487.6646090534979, 188.31275720164606],
+        [511.3683127572016, 168.559670781893],
+        [511.3683127572016, 159.3415637860082],
+        [520.1474622770919, 158.9026063100137],
+        [526.270924425583, 150.12345679012344],
+        [547.2091879929698, 154.07407407407408],
+        [556.4272949888546, 147.48971193415636],
+        [560.8168697487997, 151.8792866941015],
+        [424.3010947145061, 240.10973936899862]
+      ],
+      "closed": true
+    },
+
+    { "points": [
+        [641.2997256515774, 268.641975308642],
+        [650.0788751714678, 271.71467764060355],
+        [658.4190672153635, 268.20301783264745],
+        [662.8086419753085, 256.3511659807956],
+        [662.3696844993141, 247.57201646090533],
+        [657.9801097393689, 240.10973936899862],
+        [649.6399176954732, 238.79286694101506],
+        [642.1776406035665, 242.30452674897117],
+        [636.0322359396433, 251.96159122085047]
+      ],
+      "closed": true
+    },
+
+    { "points": [
+        [748.46901538236, 273.6548026680907],
+        [764.2078189300411, 210.69958847736623],
+        [762.0130315500685, 204.99314128943757],
+        [758.940329218107, 199.2866941015089],
+        [747.0884773662551, 197.09190672153633],
+        [747.5274348422496, 188.7517146776406],
+        [771.2311385459533, 178.21673525377227],
+        [803.2750342935527, 204.55418381344305],
+        [771.8610927863118, 279.42491544414077]
+      ],
+      "closed": true
+    },
+
+    { "points": [
+        [104.89368998628257, 317.3662551440329],
+        [102.04046639231824, 293.6625514403292],
+        [99.1872427983539, 269.9588477366255],
+        [100.95379488288319, 251.96159122085047],
+        [96.58469866684632, 245.90844785410107],
+        [87.99906752362017, 242.49604668889094],
+        [77.55231630529207, 240.07757282734494],
+        [65.89008334318265, 240.98717141239055],
+        [49.14609053497942, 252.40054869684496],
+        [49.14609053497942, 265.13031550068587],
+        [60.558984910836756, 273.4705075445816],
+        [73.28875171467763, 275.6652949245542],
+        [76, 320],
+        [84, 320],
+        [84, 276],
+        [92, 268],
+        [100, 320]
+      ],
+      "closed": true
+    }
+  ]
+}

@@ -1,0 +1,226 @@
+{
+  "world": {
+    "width": 640
+  },
+
+  "scaling": {
+    "near": {
+      "y": 300,
+      "scale": 1
+    },
+
+    "far": {
+      "y": 174,
+      "scale": 0.68
+    }
+  },
+
+  "portals": {
+    "entries": {
+      "hidden": {
+        "x": 0,
+        "y": 0
+      },
+      "dog_entry": {
+        "x": 320,
+        "y": 230,
+        "facing": "north",
+        "walk": "north"
+      },
+      "nosy_box_entry": {
+        "x": 404,
+        "y": 285,
+        "facing": "north",
+        "walk": "north"
+      }
+    },
+
+    "exits": {
+      "dog_exit": {
+        "destination": {
+          "scene": "home",
+          "entry": "start"
+        },
+        "walk": "south",
+        "hotspot": [
+          [274, 320],
+          [366, 320],
+          [366, 360],
+          [274, 360]
+        ]
+      },
+      "nosy_box_exit": {
+        "destination": {
+          "scene": "home",
+          "entry": "start"
+        },
+        "walk": "south",
+        "hotspot": [
+          [358, 320],
+          [450, 320],
+          [450, 360],
+          [358, 360]
+        ]
+      }
+    }
+  },
+
+  "triggers": [
+    { "on": "sceneEnter", "run": "ending" }
+  ],
+
+  "scripts": {
+    "ending": {
+      "cutscene": true,
+      "steps": [
+        { "action": "removeActor", "actor": "ego" },
+        { "action": "wait", "seconds": 1.5 },
+        { "action": "showOverlay",
+          "background": "black",
+          "align": "top",
+          "margin": 56,
+          "transitionMs": 1200,
+          "items": [
+            { "insert": "logo_dog.png",
+              "margin": 12
+            }
+          ]
+        },
+        { "action": "wait", "seconds": 3 },
+        { "action": "showOverlay",
+          "background": "black",
+          "align": "top",
+          "margin": 60,
+          "transition": "crossfade",
+          "transitionMs": 1200,
+          "items": [
+            { "insert": "logo_dog.png",
+              "margin": 8
+            },
+            { "text": [
+                "I'm starting",
+                "to worry about",
+                "your curiosity."
+              ],
+              "style": "small",
+              "margin": 2
+            }
+          ]
+        },
+        { "action": "wait", "seconds": 5 },
+        { "action": "showOverlay",
+          "background": "black",
+          "align": "top",
+          "margin": 56,
+          "transition": "crossfade",
+          "transitionMs": 1200,
+          "items": [
+            { "insert": "logo_dog.png",
+              "margin": 12
+            }
+          ]
+        },
+        { "action": "wait", "seconds": 1 },
+        { "action": "showOverlay",
+          "background": "black",
+          "align": "top",
+          "margin": 60,
+          "transition": "crossfade",
+          "transitionMs": 1200,
+          "items": [
+            { "insert": "logo_dog.png",
+              "margin": 8
+            },
+            { "text": [
+                "Curiosity's",
+                "a funny thing",
+                "for a machine."
+              ],
+              "style": "small",
+              "margin": 2
+            }
+          ]
+        },
+        { "action": "wait", "seconds": 5 },
+        { "action": "dismiss", "transitionMs": 2000 },
+        { "action": "showOverlay",
+          "transitionMs": 2000,
+          "items": [
+            { "text": "Thank you for playing" }
+          ]
+        },
+        { "action": "wait", "seconds": 1.5 },
+        { "action": "moveCamera", "x": 320 },
+        { "action": "spawnActor", "actor": "dog", "entry": "dog_entry" },
+        { "action": "wait", "seconds": 1 },
+        { "action": "face", "actor": "dog", "facing": "west" },
+        { "action": "wait", "seconds": 0.5 },
+        { "action": "face", "actor": "dog", "facing": "east" },
+        { "action": "wait", "seconds": 0.5 },
+        { "action": "playAnimation", "actor": "dog", "animation": "sniff" },
+        { "action": "waitForAnimation", "actor": "dog" },
+        { "action": "wait", "seconds": 0.4 },
+        { "action": "spawnActor", "actor": "nosy_box", "entry": "nosy_box_entry", "state": "mobile" },
+        { "action": "wait", "seconds": 1 },
+        { "action": "spawnObject", "object": "antenna", "x": 404, "y": 292, "persist": false, "state": "deploy_north" },
+        { "action": "waitForAnimation", "object": "antenna" },
+        { "action": "setObjectState", "object": "antenna", "state": "sweep_north" },
+        { "action": "wait", "seconds": 1 },
+        { "action": "say", "actor": "nosy_box", "text": "Interesting." },
+        { "action": "wait", "seconds": 1 },
+        { "action": "say", "actor": "nosy_box", "text": "According to my observations..." },
+        { "action": "wait", "seconds": 1 },
+        { "action": "say", "actor": "nosy_box", "text": "We appear to have reached the credits." },
+        { "action": "wait", "seconds": 1 },
+        { "action": "face", "actor": "dog", "facing": "north" },
+        { "action": "wait", "seconds": 2 },
+        { "action": "say", "actor": "dog", "text": "...They're awfully short." },
+        { "action": "wait", "seconds": 2.5 },
+        { "action": "say", "actor": "nosy_box", "text": "Complete, nevertheless." },
+        { "action": "wait", "seconds": 1 },
+        { "action": "face", "actor": "dog", "facing": "east" },
+        { "action": "wait", "seconds": 2 },
+        { "action": "setObjectState", "object": "antenna", "state": "undeploy_north" },
+        { "action": "waitForAnimation", "object": "antenna" },
+        { "action": "removeObject", "object": "antenna" },
+        { "action": "wait", "seconds": 1 },
+        { "action": "say", "actor": "nosy_box", "text": "Well." },
+        { "action": "wait", "seconds": 1 },
+        { "action": "say", "actor": "nosy_box", "text": "I believe this is where everything resets." },
+        { "action": "wait", "seconds": 1.5 },
+        { "action": "removeActor", "actor": "nosy_box", "exit": "nosy_box_exit" },
+        { "action": "wait", "seconds": 0.8 },
+        { "action": "face", "actor": "dog", "facing": "south" },
+        { "action": "wait", "seconds": 2 },
+        { "action": "removeActor", "actor": "dog", "exit": "dog_exit" },
+        { "action": "wait", "seconds": 1 },
+        { "action": "dismiss", "transitionMs": 1500 },
+        { "action": "showOverlay",
+          "transitionMs": 1500,
+          "items": [
+            { "text": "[Press any key]",
+              "style": "small"
+            }
+          ]
+        },
+        { "action": "waitForInput" },
+        { "action": "dismiss", "transitionMs": 1200 },
+        { "action": "wait", "seconds": 0.5 },
+        { "action": "restartGame" }
+      ]
+    }
+  },
+
+  "walkableAreas": [
+    { "points": [
+        [40, 230],
+        [600, 230],
+        [600, 360],
+        [40, 360]
+      ],
+      "closed": true
+    }
+  ],
+
+  "occluders": []
+}

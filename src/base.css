@@ -1,0 +1,95 @@
+/**
+ * base.css
+ * Foundational styles linked from every HTML entry point — theme tokens, font
+ * faces, the global reset, and the #app / #world / #backdrop layout.
+ *
+ * Shared by the game and the dev tools; game-UI tokens (inventory, verb line)
+ * live in ui.css instead.
+ */
+
+/* ══ Theme tokens ══════════════════════ */
+
+:root {
+  --dj-letterbox-color: #000000;  /* page background, and what shows through a world that hasn't painted yet */
+  --dj-scene-fade: 0ms;  /* runtime value written from CONFIG.scene.fadeMs at boot (game.js) */
+}
+
+/* ══ Fonts ═════════════════════════════ */
+/*
+ * ScummDialog and ScummSolid are considered Doodlejiggy's built-in system
+ * fonts (engine renderer roles + dev tools) and stay bundled in the engine for
+ * correct rendering. See README § game.json for provenance and attribution.
+ */
+
+@font-face {
+  font-family: 'ScummSolid';
+  src: url('../fonts/lucasarts-scumm-menu-solid.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'ScummDialog';
+  src: url('../fonts/lucasarts-scumm-solid.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+/* ══ Reset ═════════════════════════════ */
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* ══ Layout ════════════════════════════ */
+
+html, body {
+  width: 100%;
+  height: 100vh;
+  height: calc(var(--vh, 1vh) * 100);
+  overflow: hidden;
+  background: var(--dj-letterbox-color);
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+}
+
+#app {
+  width: 100%;
+  height: 100vh;
+  height: calc(var(--vh, 1vh) * 100);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  /* Scene transitions fade #app as a group (world layer + world canvas), so they
+     composite opaquely first and the flattened picture fades — no per-layer
+     transparency. Initial hidden state is set in game.js, not here, so the
+     design tool (shares #app, skips that boot path) stays visible. */
+  transition: opacity var(--dj-scene-fade) ease-out;
+}
+
+/* Sized by aspect-ratio, so the browser derives width from the viewport-driven
+   height. world.js writes the real ratio per scene; this one only shapes the
+   empty pre-scene state. */
+#world {
+  position: relative;
+  height: 100%;
+  aspect-ratio: 2 / 1;
+  overflow: hidden;  /* clips the backdrop when the world is narrower than the artwork */
+  flex: none;  /* a wide world should overflow #app, not shrink to fit */
+}
+
+#backdrop {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: auto;
+  image-rendering: pixelated;
+  user-select: none;
+  -webkit-user-drag: none;
+  pointer-events: none;
+}
