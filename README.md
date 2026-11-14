@@ -91,7 +91,7 @@ Note: `npm run preview` runs the production build, so `import.meta.env.DEV` is `
 
 ## Deployment
 
-Automatically deployed to GitLab Pages on push to the default branch. CI runs `npm ci && npm run build` and publishes `dist/`. Only `index.html` and its reachable imports are bundled. The entire `src/tools/` folder (the three tools plus the shared framework modules and `tools.css`) and the tool HTML pages (`design.html`, `midi.html`) are excluded (see `ARCHITECTURE.md` § Platform / runtime notes for why).
+`dist/` is the production build (the game only, no dev tools): a static site to serve from a domain root (or set Vite's `base` for a subpath). This repo deploys to GitHub Pages via `.github/workflows/deploy.yml`.
 
 ## Core concepts
 
