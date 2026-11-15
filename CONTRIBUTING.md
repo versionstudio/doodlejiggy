@@ -16,6 +16,8 @@ Read these in order — each topic has exactly one authoritative section:
 
 These apply throughout `src/`.
 
+Formatting: two-space indent, single quotes, semicolons; there is no formatter.
+
 ### Section dividers
 
 JS modules are split into sections by a heavy divider aligned to a uniform right edge (column 44):
